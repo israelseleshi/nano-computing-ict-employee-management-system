@@ -21,6 +21,87 @@
     animation: scaleIn 0.2s ease-out;
   }
 
+  /* Premium Custom Scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(59, 130, 246, 0.3) transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.4) 0%, 
+      rgba(147, 51, 234, 0.4) 50%, 
+      rgba(59, 130, 246, 0.6) 100%);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, 
+      rgba(59, 130, 246, 0.7) 0%, 
+      rgba(147, 51, 234, 0.7) 50%, 
+      rgba(59, 130, 246, 0.9) 100%);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+  }
+
+  /* Remove scrollbar arrows */
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  /* Premium Sidebar Scrollbar */
+  .sidebar-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.2);
+    border-radius: 10px;
+    margin: 8px 0;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, 
+      rgba(148, 163, 184, 0.4) 0%, 
+      rgba(100, 116, 139, 0.6) 50%, 
+      rgba(148, 163, 184, 0.4) 100%);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, 
+      rgba(59, 130, 246, 0.6) 0%, 
+      rgba(147, 51, 234, 0.7) 50%, 
+      rgba(59, 130, 246, 0.6) 100%);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+  }
+
+  .sidebar-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }
+
   @keyframes slideIn {
     from {
       opacity: 0;

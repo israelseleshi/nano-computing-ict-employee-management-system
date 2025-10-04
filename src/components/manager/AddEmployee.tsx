@@ -27,8 +27,53 @@ export default function AddEmployee({ onAddEmployee }: AddEmployeeProps) {
     'Human Resources'
   ];
 
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    hourlyRate: '',
+    department: ''
+  });
+
+  const validateForm = () => {
+    const newErrors = {
+      name: '',
+      email: '',
+      hourlyRate: '',
+      department: ''
+    };
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+
+    if (!formData.hourlyRate.trim()) {
+      newErrors.hourlyRate = 'Hourly rate is required';
+    } else if (isNaN(parseFloat(formData.hourlyRate)) || parseFloat(formData.hourlyRate) <= 0) {
+      newErrors.hourlyRate = 'Please enter a valid hourly rate';
+    }
+
+    if (!formData.department) {
+      newErrors.department = 'Please select a department';
+    }
+
+    setErrors(newErrors);
+    return Object.values(newErrors).every(error => error === '');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     const newEmployee = {
       name: formData.name,
@@ -40,6 +85,13 @@ export default function AddEmployee({ onAddEmployee }: AddEmployeeProps) {
     onAddEmployee(newEmployee);
 
     setFormData({
+      name: '',
+      email: '',
+      hourlyRate: '',
+      department: ''
+    });
+
+    setErrors({
       name: '',
       email: '',
       hourlyRate: '',
@@ -75,16 +127,23 @@ export default function AddEmployee({ onAddEmployee }: AddEmployeeProps) {
               Full Name
             </label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type="text"
                 required
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
-                placeholder="Enter employee's full name"
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                  errors.name 
+                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                }`}
+                placeholder="John Doe"
               />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             </div>
+            {errors.name && (
+              <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+            )}
           </div>
 
           <div>
@@ -148,12 +207,7 @@ export default function AddEmployee({ onAddEmployee }: AddEmployeeProps) {
           <div className="pt-4">
             <button
               type="submit"
-              disabled={!isFormValid}
-              className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200 ${
-                isFormValid
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:shadow-lg hover:shadow-cyan-500/30 hover:scale-[1.02]'
-                  : 'bg-gray-300 cursor-not-allowed'
-              }`}
+              className="w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200 bg-blue-600 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Add Employee
             </button>

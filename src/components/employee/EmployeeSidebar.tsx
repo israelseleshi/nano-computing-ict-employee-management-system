@@ -53,7 +53,7 @@ export default function EmployeeSidebar({ activeView, onViewChange, onLogout }: 
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+        <nav className="flex-1 py-4 space-y-2 overflow-y-auto">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeView === item.id;
@@ -62,16 +62,16 @@ export default function EmployeeSidebar({ activeView, onViewChange, onLogout }: 
               <button
                 key={item.id}
                 onClick={() => onViewChange(item.id)}
-                className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'space-x-3'} py-3 transition-all duration-200 group ${
+                className={`w-full flex items-center text-left transition-all duration-200 group ${
                   isActive
-                    ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-                } ${isCollapsed ? 'px-4 rounded-lg' : 'px-0 ml-0 mr-0'}`}
+                    ? 'bg-blue-600 text-white shadow-lg py-3'
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 py-3 px-4'
+                } ${isCollapsed ? 'justify-center' : ''}`}
                 title={isCollapsed ? item.label : ''}
               >
-                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-600'} ${isCollapsed ? '' : 'ml-4'}`} />
+                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white ml-4' : 'text-gray-600'} ${isCollapsed && !isActive ? 'ml-0' : ''}`} />
                 {!isCollapsed && (
-                  <span className={`font-medium ${isActive ? 'text-white' : 'text-gray-700'}`}>{item.label}</span>
+                  <span className={`font-medium ml-3 ${isActive ? 'text-white' : 'text-gray-700'}`}>{item.label}</span>
                 )}
               </button>
             );

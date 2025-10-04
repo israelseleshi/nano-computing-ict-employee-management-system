@@ -231,7 +231,7 @@ export default function Login({ onLogin, error }: LoginProps) {
               className={`w-full py-4 px-6 rounded-xl font-bold text-white text-lg transition-all duration-200 ${
                 isLoading
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:shadow-xl hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-[0.98]'
+                  : 'bg-blue-600 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98]'
               }`}
             >
               {isLoading ? (
@@ -240,7 +240,7 @@ export default function Login({ onLogin, error }: LoginProps) {
                   <span>{isSignUp ? 'Creating account...' : 'Signing in...'}</span>
                 </span>
               ) : (
-                isSignUp ? 'Create Account' : 'Access Account'
+                isSignUp ? 'Create Account' : 'Sign In'
               )}
             </button>
             
