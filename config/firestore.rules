@@ -1,0 +1,142 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection - users can only access their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow managers to read employee profiles for management purposes
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Employees collection - for employee data management
+    match /employees/{employeeId} {
+      // All authenticated users can read employee data (for dropdowns, etc.)
+      allow read: if request.auth != null;
+      
+      // Only managers can write/update employee data
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Work tickets collection
+    match /workTickets/{ticketId} {
+      // All authenticated users can read tickets (for reporting)
+      allow read: if request.auth != null;
+      
+      // Employees can create and update their own tickets
+      allow create, update: if request.auth != null && 
+        request.resource.data.employeeId == request.auth.uid;
+      
+      // Managers can read/write all tickets
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Time entries collection - NEW for Time Tracking feature
+    match /timeEntries/{entryId} {
+      // Employees can read/write their own time entries
+      allow read, write: if request.auth != null && 
+        resource.data.employeeId == request.auth.uid;
+      
+      // Allow creation of new time entries by the employee
+      allow create: if request.auth != null && 
+        request.resource.data.employeeId == request.auth.uid;
+      
+      // Managers can read/write all time entries
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Payroll entries collection - NEW for Payroll Management feature
+    match /payrollEntries/{entryId} {
+      // Only managers can access payroll data (sensitive financial information)
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Personal goals collection
+    match /goals/{goalId} {
+      // Users can only access their own goals
+      allow read, write: if request.auth != null && 
+        resource.data.employee_id == request.auth.uid;
+      
+      // Allow creation of new goals
+      allow create: if request.auth != null && 
+        request.resource.data.employee_id == request.auth.uid;
+      
+      // Managers can read employee goals for performance review
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Notifications collection
+    match /notifications/{notificationId} {
+      // Users can only access their own notifications
+      allow read, write: if request.auth != null && 
+        resource.data.user_id == request.auth.uid;
+      
+      // Allow creation of new notifications
+      allow create: if request.auth != null;
+      
+      // Managers can create notifications for employees
+      allow create: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Calendar events collection
+    match /calendarEvents/{eventId} {
+      // Users can only access their own calendar events
+      allow read, write: if request.auth != null && 
+        resource.data.employee_id == request.auth.uid;
+      
+      // Allow creation of new events
+      allow create: if request.auth != null && 
+        request.resource.data.employee_id == request.auth.uid;
+      
+      // Managers can read all calendar events for scheduling
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Performance metrics collection - for Performance Analytics feature
+    match /performanceMetrics/{metricId} {
+      // Users can read their own metrics
+      allow read: if request.auth != null && 
+        resource.data.employee_id == request.auth.uid;
+      
+      // Managers can read all metrics for analytics
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      
+      // Only system/managers can write metrics
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Ticket status updates - for Ticket Management feature
+    match /ticketStatusUpdates/{updateId} {
+      // Only managers can create status updates
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      
+      // Employees can read status updates for their tickets
+      allow read: if request.auth != null && 
+        resource.data.employeeId == request.auth.uid;
+    }
+  }
+}

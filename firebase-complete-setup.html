@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Complete Setup - Employee Management System</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        .config-section {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .config-section h3 {
+            color: #2b6cb0;
+            margin-top: 0;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        .btn {
+            background: #4299e1;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-success {
+            background: #38a169;
+        }
+        .btn-success:hover {
+            background: #2f855a;
+        }
+        .btn-warning {
+            background: #ed8936;
+        }
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4299e1, #38a169);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .status-message {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .status-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #38a169;
+        }
+        .status-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #e53e3e;
+        }
+        .status-info {
+            background: #bee3f8;
+            color: #2a4365;
+            border: 2px solid #4299e1;
+        }
+        .hidden {
+            display: none;
+        }
+        .log-container {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+        }
+        .log-success {
+            color: #68d391;
+        }
+        .log-error {
+            color: #fc8181;
+        }
+        .log-info {
+            color: #63b3ed;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .feature-card h4 {
+            color: #2b6cb0;
+            margin-top: 0;
+        }
+        .collection-preview {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔥 Firebase Complete Setup</h1>
+        <p style="text-align: center; color: #718096; font-size: 18px;">
+            Comprehensive setup for all Employee Management System features
+        </p>
+
+        <div class="config-section">
+            <h3>🔧 Firebase Configuration</h3>
+            <div class="form-group">
+                <label for="projectId">Firebase Project ID:</label>
+                <input type="text" id="projectId" value="nanocomputingict-867d1" placeholder="Your Firebase project ID">
+            </div>
+            <div class="form-group">
+                <label for="apiKey">Firebase API Key:</label>
+                <input type="password" id="apiKey" placeholder="Your Firebase API key">
+            </div>
+            <div class="form-group">
+                <label for="authDomain">Auth Domain:</label>
+                <input type="text" id="authDomain" placeholder="your-project.firebaseapp.com">
+            </div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>📊 Collections to Create</h4>
+                <ul>
+                    <li>✅ users (existing)</li>
+                    <li>✅ employees (existing)</li>
+                    <li>✅ workTickets (existing)</li>
+                    <li>🆕 timeEntries (new)</li>
+                    <li>🆕 payrollEntries (new)</li>
+                    <li>🆕 notifications (new)</li>
+                    <li>🆕 reports (new)</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h4>🔒 Security Features</h4>
+                <ul>
+                    <li>Role-based access control</li>
+                    <li>Manager-only payroll access</li>
+                    <li>Employee data privacy</li>
+                    <li>Notification permissions</li>
+                    <li>Report generation security</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn" id="setupCollectionsBtn" onclick="setupAllCollections()">
+                🚀 Generate Setup Instructions & Open Firebase Console
+            </button>
+            <button class="btn btn-warning" id="updateRulesBtn" onclick="updateFirestoreRules()">
+                🔒 Update Security Rules Only
+            </button>
+        </div>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p style="text-align: center; margin-top: 10px;" id="progressText">Starting...</p>
+        </div>
+
+        <div id="statusMessage" class="status-message hidden"></div>
+
+        <div class="log-container" id="logContainer" style="display: none;">
+            <div id="logEntries"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <button class="btn btn-success hidden" id="completeBtn" onclick="window.close()">
+                ✅ Setup Complete - Close Window
+            </button>
+            <button class="btn" onclick="location.reload()">🔄 Reset</button>
+        </div>
+
+        <!-- Collection Previews -->
+        <div class="config-section">
+            <h3>📋 New Collections Preview</h3>
+            
+            <h4>⏰ Time Entries Collection</h4>
+            <div class="collection-preview">
+{
+  "id": "time-demo-1",
+  "employeeId": "emp-1", 
+  "employeeName": "John Doe",
+  "clockIn": "09:00",
+  "clockOut": "17:00",
+  "date": "2024-01-15",
+  "status": "completed",
+  "location": "Office",
+  "totalHours": 8.0
+}
+            </div>
+
+            <h4>💰 Payroll Entries Collection</h4>
+            <div class="collection-preview">
+{
+  "id": "payroll-demo-1",
+  "employeeId": "emp-1",
+  "employeeName": "John Doe", 
+  "period": "2024-01",
+  "regularHours": 160,
+  "overtimeHours": 0,
+  "regularRate": 1500,
+  "overtimeRate": 2250,
+  "grossPay": 240000,
+  "deductions": {
+    "tax": 24000,
+    "pension": 16800,
+    "insurance": 7200
+  },
+  "netPay": 192000,
+  "status": "calculated"
+}
+            </div>
+
+            <h4>🔔 Notifications Collection</h4>
+            <div class="collection-preview">
+{
+  "id": "notif-demo-1",
+  "title": "Team Meeting Tomorrow",
+  "message": "Don't forget about our weekly team meeting at 10 AM",
+  "type": "announcement",
+  "recipients": ["emp-1", "emp-2"],
+  "recipientNames": ["John Doe", "Sarah Johnson"],
+  "sender": "Manager",
+  "timestamp": "2024-01-15T10:00:00Z",
+  "read": false,
+  "priority": "medium",
+  "category": "announcement"
+}
+            </div>
+
+            <h4>📊 Reports Collection</h4>
+            <div class="collection-preview">
+{
+  "id": "report-demo-1",
+  "type": "department",
+  "period": "month",
+  "data": {
+    "totalHours": 320,
+    "totalEarnings": 480000,
+    "departments": [...]
+  },
+  "generatedBy": "manager",
+  "timestamp": "2024-01-15T10:00:00Z"
+}
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        let db = null;
+        let app = null;
+
+        const FIRESTORE_RULES = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection - users can only access their own profile
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow managers to read employee profiles for management purposes
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Employees collection - for employee data management
+    match /employees/{employeeId} {
+      // All authenticated users can read employee data (for dropdowns, etc.)
+      allow read: if request.auth != null;
+      
+      // Only managers can write/update employee data
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Work tickets collection
+    match /workTickets/{ticketId} {
+      // All authenticated users can read tickets (for reporting)
+      allow read: if request.auth != null;
+      
+      // Employees can create and update their own tickets
+      allow create, update: if request.auth != null && 
+        request.resource.data.employeeId == request.auth.uid;
+      
+      // Managers can read/write all tickets
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Time entries collection - NEW for Time Tracking feature
+    match /timeEntries/{entryId} {
+      // Employees can read/write their own time entries
+      allow read, write: if request.auth != null && 
+        resource.data.employeeId == request.auth.uid;
+      
+      // Allow creation of new time entries by the employee
+      allow create: if request.auth != null && 
+        request.resource.data.employeeId == request.auth.uid;
+      
+      // Managers can read/write all time entries
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Payroll entries collection - NEW for Payroll Management feature
+    match /payrollEntries/{entryId} {
+      // Only managers can access payroll data (sensitive financial information)
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Notifications collection - NEW for Notification Center feature
+    match /notifications/{notificationId} {
+      // Users can only read their own notifications
+      allow read: if request.auth != null && 
+        request.auth.uid in resource.data.recipients;
+      
+      // Managers can create and read all notifications
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      
+      // Users can update read status of their own notifications
+      allow update: if request.auth != null && 
+        request.auth.uid in resource.data.recipients &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+    }
+    
+    // Reports collection - NEW for Advanced Reports feature
+    match /reports/{reportId} {
+      // Only managers can access reports
+      allow read, write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    // Performance metrics collection - for Performance Analytics feature
+    match /performanceMetrics/{metricId} {
+      // Users can read their own metrics
+      allow read: if request.auth != null && 
+        resource.data.employeeId == request.auth.uid;
+      
+      // Managers can read all metrics for analytics
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      
+      // Only system/managers can write metrics
+      allow write: if request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+  }
+}`;
+
+        window.setupAllCollections = async function() {
+            const projectId = document.getElementById('projectId').value;
+
+            if (!projectId) {
+                showStatus('Please fill in Firebase Project ID', 'error');
+                return;
+            }
+
+            // Show progress
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('logContainer').style.display = 'block';
+            document.getElementById('setupCollectionsBtn').disabled = true;
+
+            try {
+                logMessage('🔥 Starting Firebase setup...', 'info');
+                updateProgress(10, 'Preparing setup instructions...');
+
+                // Copy security rules to clipboard
+                logMessage('🔒 Copying security rules to clipboard...', 'info');
+                await navigator.clipboard.writeText(FIRESTORE_RULES);
+                logMessage('✅ Security rules copied to clipboard', 'success');
+                updateProgress(30, 'Security rules ready');
+
+                // Generate collection setup instructions
+                logMessage('📋 Generating collection setup data...', 'info');
+                const setupData = generateSetupData();
+                await navigator.clipboard.writeText(setupData);
+                logMessage('✅ Collection data copied to clipboard', 'success');
+                updateProgress(50, 'Collection data ready');
+
+                // Open Firebase console pages
+                logMessage('🌐 Opening Firebase console...', 'info');
+                
+                // Open Firestore Database
+                const firestoreUrl = `https://console.firebase.google.com/project/${projectId}/firestore/data`;
+                window.open(firestoreUrl, '_blank');
+                
+                // Open Firestore Rules (delayed)
+                setTimeout(() => {
+                    const rulesUrl = `https://console.firebase.google.com/project/${projectId}/firestore/rules`;
+                    window.open(rulesUrl, '_blank');
+                }, 2000);
+
+                updateProgress(80, 'Firebase console opened');
+
+                // Show manual setup instructions
+                showManualSetupInstructions();
+                updateProgress(100, 'Setup instructions ready!');
+
+                logMessage('🎉 Setup preparation complete!', 'success');
+                showStatus('Firebase console opened with setup instructions. Follow the manual steps below to complete the setup.', 'success');
+                
+                document.getElementById('completeBtn').classList.remove('hidden');
+
+            } catch (error) {
+                logMessage(`❌ Error: ${error.message}`, 'error');
+                showStatus(`Error: ${error.message}. Please follow manual setup instructions.`, 'error');
+                showManualSetupInstructions();
+                document.getElementById('setupCollectionsBtn').disabled = false;
+            }
+        };
+
+        window.updateFirestoreRules = async function() {
+            const projectId = document.getElementById('projectId').value;
+
+            if (!projectId) {
+                showStatus('Please fill in Firebase Project ID', 'error');
+                return;
+            }
+
+            try {
+                logMessage('📋 Copying security rules to clipboard...', 'info');
+                await navigator.clipboard.writeText(FIRESTORE_RULES);
+                logMessage('✅ Security rules copied to clipboard', 'success');
+
+                // Open Firebase console
+                logMessage('🌐 Opening Firebase console...', 'info');
+                const consoleUrl = `https://console.firebase.google.com/project/${projectId}/firestore/rules`;
+                window.open(consoleUrl, '_blank');
+
+                showStatus('Security rules copied to clipboard and Firebase console opened. Paste the rules and click "Publish".', 'success');
+
+            } catch (error) {
+                logMessage(`❌ Error: ${error.message}`, 'error');
+                showStatus(`Error: ${error.message}`, 'error');
+            }
+        };
+
+        function generateSetupData() {
+            return `
+=== FIREBASE COLLECTIONS SETUP DATA ===
+
+Copy and paste each collection data below into Firebase Console:
+
+1. TIMEENTRIES COLLECTION:
+Collection ID: timeEntries
+Document ID: time-demo-1
+Data:
+{
+  "id": "time-demo-1",
+  "employeeId": "emp-1",
+  "employeeName": "John Doe",
+  "clockIn": "09:00",
+  "clockOut": "17:00",
+  "date": "2024-01-15",
+  "status": "completed",
+  "location": "Office",
+  "totalHours": 8
+}
+
+2. PAYROLLENTRIES COLLECTION:
+Collection ID: payrollEntries
+Document ID: payroll-demo-1
+Data:
+{
+  "id": "payroll-demo-1",
+  "employeeId": "emp-1",
+  "employeeName": "John Doe",
+  "period": "2024-01",
+  "regularHours": 160,
+  "overtimeHours": 0,
+  "regularRate": 1500,
+  "overtimeRate": 2250,
+  "grossPay": 240000,
+  "deductions": {
+    "tax": 24000,
+    "pension": 16800,
+    "insurance": 7200
+  },
+  "netPay": 192000,
+  "status": "calculated"
+}
+
+3. NOTIFICATIONS COLLECTION:
+Collection ID: notifications
+Document ID: notif-demo-1
+Data:
+{
+  "id": "notif-demo-1",
+  "title": "Team Meeting Tomorrow",
+  "message": "Don't forget about our weekly team meeting at 10 AM",
+  "type": "announcement",
+  "recipients": ["emp-1", "emp-2"],
+  "recipientNames": ["John Doe", "Sarah Johnson"],
+  "sender": "Manager",
+  "timestamp": "${new Date().toISOString()}",
+  "read": false,
+  "priority": "medium",
+  "category": "announcement"
+}
+
+4. REPORTS COLLECTION:
+Collection ID: reports
+Document ID: report-demo-1
+Data:
+{
+  "id": "report-demo-1",
+  "type": "department",
+  "period": "month",
+  "data": {
+    "totalHours": 320,
+    "totalEarnings": 480000,
+    "departments": [
+      { "name": "Development", "hours": 160, "earnings": 240000 },
+      { "name": "Design", "hours": 160, "earnings": 240000 }
+    ]
+  },
+  "generatedBy": "manager",
+  "timestamp": "${new Date().toISOString()}"
+}
+
+=== END SETUP DATA ===
+            `;
+        }
+
+        function showManualSetupInstructions() {
+            const instructionsHtml = `
+                <div class="config-section" id="manualInstructions" style="background: #fef5e7; border-color: #ed8936;">
+                    <h3 style="color: #dd6b20;">📋 Manual Setup Instructions</h3>
+                    <div style="background: white; padding: 15px; border-radius: 6px; margin: 10px 0;">
+                        <h4>Step 1: Create Collections in Firestore</h4>
+                        <ol>
+                            <li>In the opened Firestore Database tab, click <strong>"Start collection"</strong></li>
+                            <li>Create each collection with the data provided (copied to clipboard)</li>
+                            <li>For each collection:
+                                <ul>
+                                    <li>Enter Collection ID (e.g., "timeEntries")</li>
+                                    <li>Click "Next"</li>
+                                    <li>Enter Document ID (e.g., "time-demo-1")</li>
+                                    <li>Add fields manually or paste JSON data</li>
+                                    <li>Click "Save"</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        
+                        <h4>Step 2: Update Security Rules</h4>
+                        <ol>
+                            <li>In the opened Firestore Rules tab</li>
+                            <li>Replace existing rules with the copied rules</li>
+                            <li>Click <strong>"Publish"</strong></li>
+                        </ol>
+                        
+                        <h4>Step 3: Verify Setup</h4>
+                        <ol>
+                            <li>Check that all 4 collections exist: timeEntries, payrollEntries, notifications, reports</li>
+                            <li>Verify security rules are published</li>
+                            <li>Test your application with the new features</li>
+                        </ol>
+                        
+                        <div style="background: #c6f6d5; padding: 10px; border-radius: 6px; margin-top: 15px;">
+                            <strong>✅ Collection setup data and security rules have been copied to your clipboard!</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Insert instructions after the log container
+            const logContainer = document.getElementById('logContainer');
+            logContainer.insertAdjacentHTML('afterend', instructionsHtml);
+        }
+
+        function updateProgress(percentage, message) {
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = message;
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = `status-message status-${type}`;
+            statusEl.classList.remove('hidden');
+        }
+
+        function logMessage(message, type) {
+            const logEntries = document.getElementById('logEntries');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logEntries.appendChild(entry);
+            logEntries.scrollTop = logEntries.scrollHeight;
+        }
+
+        // Auto-fill auth domain based on project ID
+        document.getElementById('projectId').addEventListener('input', function(e) {
+            const projectId = e.target.value;
+            if (projectId) {
+                document.getElementById('authDomain').value = `${projectId}.firebaseapp.com`;
+            }
+        });
+    </script>
+</body>
+</html>
