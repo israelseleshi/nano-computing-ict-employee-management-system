@@ -102,10 +102,10 @@ export default function AddEmployee({ onAddEmployee }: AddEmployeeProps) {
     setTimeout(() => setShowSuccess(false), 3000);
   };
 
-  const isFormValid = formData.name && formData.email && formData.hourlyRate && formData.department;
 
   return (
-    <div className="max-w-3xl animate-fade-in">
+    <div className="flex justify-center">
+      <div className="max-w-2xl w-full animate-fade-in">
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Add New Employee</h2>
         <p className="text-gray-600">Enter employee details to add them to the system</p>
@@ -219,6 +219,7 @@ export default function AddEmployee({ onAddEmployee }: AddEmployeeProps) {
           <span className="font-semibold">Note:</span> In production, this form will integrate with your backend API
           to store employee data in the database. Currently using mock data for demonstration.
         </p>
+      </div>
       </div>
     </div>
   );

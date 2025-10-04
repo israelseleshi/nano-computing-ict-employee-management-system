@@ -38,10 +38,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, 
-      rgba(59, 130, 246, 0.4) 0%, 
-      rgba(147, 51, 234, 0.4) 50%, 
-      rgba(59, 130, 246, 0.6) 100%);
+    background: rgba(59, 130, 246, 0.5);
     border-radius: 10px;
     border: 2px solid transparent;
     background-clip: content-box;
@@ -50,10 +47,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, 
-      rgba(59, 130, 246, 0.7) 0%, 
-      rgba(147, 51, 234, 0.7) 50%, 
-      rgba(59, 130, 246, 0.9) 100%);
+    background: rgba(59, 130, 246, 0.8);
     backdrop-filter: blur(15px);
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
   }
@@ -80,20 +74,14 @@
   }
 
   .sidebar-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, 
-      rgba(148, 163, 184, 0.4) 0%, 
-      rgba(100, 116, 139, 0.6) 50%, 
-      rgba(148, 163, 184, 0.4) 100%);
+    background: rgba(148, 163, 184, 0.5);
     border-radius: 10px;
     backdrop-filter: blur(8px);
     transition: all 0.3s ease;
   }
 
   .sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, 
-      rgba(59, 130, 246, 0.6) 0%, 
-      rgba(147, 51, 234, 0.7) 50%, 
-      rgba(59, 130, 246, 0.6) 100%);
+    background: rgba(59, 130, 246, 0.7);
     backdrop-filter: blur(12px);
     box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
   }

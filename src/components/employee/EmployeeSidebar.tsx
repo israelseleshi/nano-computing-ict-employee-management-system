@@ -45,7 +45,6 @@ export default function EmployeeSidebar({ activeView, onViewChange, onLogout }: 
             </div>
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Menu className="w-5 h-5 text-gray-600" />
             </button>
@@ -59,21 +58,25 @@ export default function EmployeeSidebar({ activeView, onViewChange, onLogout }: 
             const isActive = activeView === item.id;
 
             return (
-              <button
-                key={item.id}
-                onClick={() => onViewChange(item.id)}
-                className={`w-full flex items-center text-left transition-all duration-200 group ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-lg py-3'
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 py-3 px-4'
-                } ${isCollapsed ? 'justify-center' : ''}`}
-                title={isCollapsed ? item.label : ''}
-              >
-                <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white ml-4' : 'text-gray-600'} ${isCollapsed && !isActive ? 'ml-0' : ''}`} />
-                {!isCollapsed && (
-                  <span className={`font-medium ml-3 ${isActive ? 'text-white' : 'text-gray-700'}`}>{item.label}</span>
+              <div key={item.id} className="relative">
+                {isActive && (
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-500 rounded-r-full shadow-lg shadow-blue-500/50"></div>
                 )}
-              </button>
+                <button
+                  onClick={() => onViewChange(item.id)}
+                  className={`w-full flex items-center text-left transition-all duration-200 group ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-lg py-3'
+                      : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 py-3 px-4'
+                  } ${isCollapsed ? 'justify-center' : ''}`}
+                  title={isCollapsed ? item.label : ''}
+                >
+                  <Icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white ml-4' : 'text-gray-600'} ${isCollapsed && !isActive ? 'ml-0' : ''}`} />
+                  {!isCollapsed && (
+                    <span className={`font-medium ml-3 ${isActive ? 'text-white' : 'text-gray-700'}`}>{item.label}</span>
+                  )}
+                </button>
+              </div>
             );
           })}
         </nav>

@@ -127,7 +127,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
+        <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-blue-600 text-sm font-medium">Active Now</p>
@@ -137,7 +137,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
+        <div className="p-6 bg-green-50 rounded-xl border border-green-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-green-600 text-sm font-medium">Completed Today</p>
@@ -147,7 +147,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-100">
+        <div className="p-6 bg-purple-50 rounded-xl border border-purple-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-purple-600 text-sm font-medium">Total Hours</p>
@@ -157,7 +157,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-100">
+        <div className="p-6 bg-orange-50 rounded-xl border border-orange-100">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-orange-600 text-sm font-medium">Employees Worked</p>
@@ -213,7 +213,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
             <button
               onClick={handleClockIn}
               disabled={!selectedEmployee}
-              className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-green-500 text-white rounded-lg font-medium hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               <Play className="w-5 h-5" />
               <span>Clock In</span>
@@ -237,7 +237,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
                 return (
                   <div key={entry.id} className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 bg-green-600 rounded-lg flex items-center justify-center text-white font-bold">
                         {entry.employeeName.charAt(0)}
                       </div>
                       <div>
@@ -297,7 +297,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
                 <tr key={entry.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
                         {entry.employeeName.charAt(0)}
                       </div>
                       <div>

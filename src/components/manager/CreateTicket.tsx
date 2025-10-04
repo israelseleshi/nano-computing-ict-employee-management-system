@@ -23,9 +23,57 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errors, setErrors] = useState({
+    employeeId: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    taskDescription: ''
+  });
+
+  const validateForm = () => {
+    const newErrors = {
+      employeeId: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      taskDescription: ''
+    };
+
+    if (!formData.employeeId) {
+      newErrors.employeeId = 'Please select an employee';
+    }
+
+    if (!formData.date) {
+      newErrors.date = 'Work date is required';
+    }
+
+    if (!formData.startTime) {
+      newErrors.startTime = 'Start time is required';
+    }
+
+    if (!formData.endTime) {
+      newErrors.endTime = 'End time is required';
+    } else if (formData.startTime && formData.endTime <= formData.startTime) {
+      newErrors.endTime = 'End time must be after start time';
+    }
+
+    if (!formData.taskDescription.trim()) {
+      newErrors.taskDescription = 'Task description is required';
+    } else if (formData.taskDescription.trim().length < 10) {
+      newErrors.taskDescription = 'Task description must be at least 10 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.values(newErrors).every(error => error === '');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     const newTicket = {
       employeeId: formData.employeeId,
@@ -45,16 +93,18 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
       taskDescription: ''
     });
 
+    setErrors({
+      employeeId: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      taskDescription: ''
+    });
+
     setShowSuccess(true);
     setTimeout(() => setShowSuccess(false), 3000);
   };
 
-  const isFormValid =
-    formData.employeeId &&
-    formData.date &&
-    formData.startTime &&
-    formData.endTime &&
-    formData.taskDescription;
 
   const selectedEmployee = employees.find(e => e.id === formData.employeeId);
 
@@ -77,7 +127,8 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
   };
 
   return (
-    <div className="max-w-3xl animate-fade-in">
+    <div className="flex justify-center">
+      <div className="max-w-2xl w-full animate-fade-in">
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Work Ticket</h2>
         <p className="text-gray-600">Log work hours and tasks for employees</p>
@@ -104,7 +155,11 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
                 required
                 value={formData.employeeId}
                 onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all appearance-none bg-white"
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all appearance-none bg-white ${
+                  errors.employeeId 
+                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                }`}
               >
                 <option value="">Choose an employee</option>
                 {employees.map((employee) => (
@@ -114,6 +169,9 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
                 ))}
               </select>
             </div>
+            {errors.employeeId && (
+              <p className="mt-1 text-sm text-red-600">{errors.employeeId}</p>
+            )}
           </div>
 
           <div>
@@ -127,9 +185,16 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
                 required
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                  errors.date 
+                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                }`}
               />
             </div>
+            {errors.date && (
+              <p className="mt-1 text-sm text-red-600">{errors.date}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -144,9 +209,16 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
                   required
                   value={formData.startTime}
                   onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                    errors.startTime 
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                      : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                  }`}
                 />
               </div>
+              {errors.startTime && (
+                <p className="mt-1 text-sm text-red-600">{errors.startTime}</p>
+              )}
             </div>
 
             <div>
@@ -160,9 +232,16 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
                   required
                   value={formData.endTime}
                   onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+                  className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all ${
+                    errors.endTime 
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                      : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                  }`}
                 />
               </div>
+              {errors.endTime && (
+                <p className="mt-1 text-sm text-red-600">{errors.endTime}</p>
+              )}
             </div>
           </div>
 
@@ -177,14 +256,21 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
                 value={formData.taskDescription}
                 onChange={(e) => setFormData({ ...formData, taskDescription: e.target.value })}
                 rows={4}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none"
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all resize-none ${
+                  errors.taskDescription 
+                    ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                    : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
+                }`}
                 placeholder="Describe the work performed..."
               />
             </div>
+            {errors.taskDescription && (
+              <p className="mt-1 text-sm text-red-600">{errors.taskDescription}</p>
+            )}
           </div>
 
           {selectedEmployee && formData.startTime && formData.endTime && (
-            <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg p-6 border border-cyan-200">
+            <div className="bg-blue-50 rounded-lg p-6 border border-blue-200">
               <h4 className="font-semibold text-gray-900 mb-3">Ticket Summary</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -202,12 +288,7 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
           <div className="pt-4">
             <button
               type="submit"
-              disabled={!isFormValid}
-              className={`w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200 ${
-                isFormValid
-                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:shadow-lg hover:shadow-cyan-500/30 hover:scale-[1.02]'
-                  : 'bg-gray-300 cursor-not-allowed'
-              }`}
+              className="w-full py-3 px-6 rounded-lg font-semibold text-white transition-all duration-200 bg-blue-600 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Create Work Ticket
             </button>
@@ -219,6 +300,7 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
           <span className="font-semibold">Note:</span> Work tickets are automatically calculated based on hourly rates.
           In production, these will be stored in your database and available for reporting.
         </p>
+      </div>
       </div>
     </div>
   );
