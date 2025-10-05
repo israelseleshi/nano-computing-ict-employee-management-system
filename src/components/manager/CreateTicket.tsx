@@ -130,7 +130,7 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
     <div className="flex justify-center">
       <div className="max-w-2xl w-full animate-fade-in">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Work Ticket</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Create Work Ticket</h2>
         <p className="text-gray-600">Log work hours and tasks for employees</p>
       </div>
 

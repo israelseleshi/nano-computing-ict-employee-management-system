@@ -262,7 +262,7 @@ export default function AdvancedReports({ employees, tickets }: AdvancedReportsP
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Advanced Reports</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Advanced Reports</h1>
           <p className="text-gray-600 mt-2">Comprehensive analytics and business intelligence</p>
         </div>
         <div className="flex items-center space-x-3">
@@ -325,43 +325,43 @@ export default function AdvancedReports({ employees, tickets }: AdvancedReportsP
 
       {/* Overview Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Clock className="w-8 h-8 text-blue-500" />
             <div>
               <p className="text-blue-600 text-sm font-medium">Total Hours</p>
               <p className="text-2xl font-bold text-blue-900">{overviewStats.totalHours.toFixed(1)}h</p>
             </div>
-            <Clock className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <DollarSign className="w-8 h-8 text-green-500" />
             <div>
               <p className="text-green-600 text-sm font-medium">Total Earnings</p>
               <p className="text-2xl font-bold text-green-900">ETB {overviewStats.totalEarnings.toFixed(0)}</p>
             </div>
-            <DollarSign className="w-8 h-8 text-green-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Users className="w-8 h-8 text-purple-500" />
             <div>
               <p className="text-purple-600 text-sm font-medium">Avg Hours/Employee</p>
               <p className="text-2xl font-bold text-purple-900">{overviewStats.avgHoursPerEmployee.toFixed(1)}h</p>
             </div>
-            <Users className="w-8 h-8 text-purple-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <TrendingUp className="w-8 h-8 text-orange-500" />
             <div>
               <p className="text-orange-600 text-sm font-medium">Productivity Rate</p>
               <p className="text-2xl font-bold text-orange-900">{overviewStats.productivityRate.toFixed(1)}%</p>
             </div>
-            <TrendingUp className="w-8 h-8 text-orange-500" />
           </div>
         </div>
       </div>

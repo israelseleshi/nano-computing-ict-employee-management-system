@@ -89,50 +89,50 @@ export default function TicketManagement({ employees, tickets, onUpdateTicketSta
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Ticket Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Ticket Management</h1>
           <p className="text-gray-600 mt-2">Review and manage employee work tickets</p>
         </div>
       </div>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <FileText className="w-8 h-8 text-blue-500" />
             <div>
               <p className="text-blue-600 text-sm font-medium">Total Tickets</p>
               <p className="text-2xl font-bold text-blue-900">{totalTickets}</p>
             </div>
-            <FileText className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl border border-yellow-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Clock className="w-8 h-8 text-yellow-500" />
             <div>
               <p className="text-yellow-600 text-sm font-medium">Pending</p>
               <p className="text-2xl font-bold text-yellow-900">{pendingTickets}</p>
             </div>
-            <Clock className="w-8 h-8 text-yellow-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <CheckCircle className="w-8 h-8 text-green-500" />
             <div>
               <p className="text-green-600 text-sm font-medium">Approved</p>
               <p className="text-2xl font-bold text-green-900">{approvedTickets}</p>
             </div>
-            <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-red-50 to-pink-50 rounded-xl border border-red-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <XCircle className="w-8 h-8 text-red-500" />
             <div>
               <p className="text-red-600 text-sm font-medium">Rejected</p>
               <p className="text-2xl font-bold text-red-900">{rejectedTickets}</p>
             </div>
-            <XCircle className="w-8 h-8 text-red-500" />
           </div>
         </div>
       </div>

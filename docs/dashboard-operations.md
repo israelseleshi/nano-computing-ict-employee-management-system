@@ -568,6 +568,369 @@ const recentNotifications = notifications
 
 ---
 
+### 6. Employee Profile Management
+**Location**: `src/components/employee/ProfileManagement.tsx`
+**Route**: Accessed via employee sidebar
+
+#### Features:
+- **Personal Information**: View and edit personal details
+- **Profile Picture**: Upload and manage profile photo
+- **Contact Information**: Update phone, address, emergency contacts
+- **Skills & Certifications**: Manage professional qualifications
+- **Password Change**: Secure password updates
+- **Account Settings**: Notification preferences, language settings
+
+#### Implementation:
+```typescript
+interface ProfileManagementProps {
+  profile: Profile;
+  onUpdateProfile: (updates: Partial<Profile>) => void;
+}
+
+// Profile update handler
+const handleProfileUpdate = (field: keyof Profile, value: any) => {
+  const updates = { [field]: value };
+  onUpdateProfile(updates);
+  setShowSuccess(true);
+};
+
+// Skills management
+const addSkill = (skill: string) => {
+  const updatedSkills = [...(profile.skills || []), skill];
+  handleProfileUpdate('skills', updatedSkills);
+};
+```
+
+#### Data Flow:
+1. **Profile data** loaded from authentication context
+2. **Form updates** trigger validation
+3. **Profile updates** saved to database
+4. **Success feedback** confirms changes
+
+---
+
+### 7. Leave Management
+**Location**: `src/components/employee/LeaveManagement.tsx`
+**Route**: Accessed via employee sidebar
+
+#### Features:
+- **Leave Requests**: Submit vacation, sick leave, personal time off
+- **Leave Balance**: View available leave days by type
+- **Request History**: Track past leave requests and approvals
+- **Leave Calendar**: Visual representation of approved leave
+- **Manager Approval**: Request routing to managers
+- **Emergency Leave**: Quick emergency leave submission
+
+#### Implementation:
+```typescript
+interface LeaveRequest {
+  id: string;
+  employeeId: string;
+  type: 'vacation' | 'sick' | 'personal' | 'emergency';
+  startDate: string;
+  endDate: string;
+  days: number;
+  reason: string;
+  status: 'pending' | 'approved' | 'rejected';
+  managerComment?: string;
+  submittedAt: string;
+}
+
+// Leave request submission
+const submitLeaveRequest = (requestData: Omit<LeaveRequest, 'id' | 'status' | 'submittedAt'>) => {
+  const newRequest: LeaveRequest = {
+    ...requestData,
+    id: `leave-${Date.now()}`,
+    status: 'pending',
+    submittedAt: new Date().toISOString()
+  };
+  onSubmitLeaveRequest(newRequest);
+};
+```
+
+#### Data Flow:
+1. **Leave request** submitted by employee
+2. **Manager notification** sent for approval
+3. **Status updates** reflected in employee dashboard
+4. **Leave balance** automatically updated upon approval
+
+---
+
+### 8. Performance Dashboard
+**Location**: `src/components/employee/PerformanceDashboard.tsx`
+**Route**: Accessed via employee sidebar
+
+#### Features:
+- **Performance Metrics**: Personal KPIs and productivity scores
+- **Goal Progress**: Visual progress tracking for set objectives
+- **Skill Development**: Track learning and certification progress
+- **Feedback History**: View manager feedback and reviews
+- **Achievement Badges**: Gamified achievement system
+- **Performance Trends**: Historical performance analytics
+
+#### Implementation:
+```typescript
+interface PerformanceMetrics {
+  employeeId: string;
+  period: string;
+  hoursWorked: number;
+  tasksCompleted: number;
+  qualityScore: number;
+  punctualityScore: number;
+  collaborationScore: number;
+  overallRating: number;
+  goals: Goal[];
+  achievements: Achievement[];
+}
+
+// Performance calculation
+const calculatePerformanceScore = (metrics: PerformanceMetrics) => {
+  const weights = {
+    quality: 0.3,
+    punctuality: 0.2,
+    collaboration: 0.2,
+    productivity: 0.3
+  };
+  
+  return (
+    metrics.qualityScore * weights.quality +
+    metrics.punctualityScore * weights.punctuality +
+    metrics.collaborationScore * weights.collaboration +
+    (metrics.hoursWorked / 40) * 100 * weights.productivity
+  );
+};
+```
+
+#### Data Flow:
+1. **Performance data** aggregated from work tickets and time entries
+2. **Metrics calculated** based on predefined formulas
+3. **Visual charts** rendered for trend analysis
+4. **Goal progress** updated based on achievements
+
+---
+
+### 9. Team Collaboration
+**Location**: `src/components/employee/TeamCollaboration.tsx`
+**Route**: Accessed via employee sidebar
+
+#### Features:
+- **Team Directory**: View team members and contact information
+- **Project Collaboration**: Shared project workspaces
+- **Message Center**: Internal team messaging system
+- **File Sharing**: Document and resource sharing
+- **Team Calendar**: Shared team events and meetings
+- **Collaboration Tools**: Real-time document editing, comments
+
+#### Implementation:
+```typescript
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  department: string;
+  email: string;
+  phone: string;
+  avatar?: string;
+  status: 'online' | 'offline' | 'busy' | 'away';
+}
+
+interface Message {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  content: string;
+  timestamp: string;
+  read: boolean;
+  type: 'text' | 'file' | 'system';
+}
+
+// Message sending
+const sendMessage = (receiverId: string, content: string) => {
+  const message: Message = {
+    id: `msg-${Date.now()}`,
+    senderId: profile.id,
+    receiverId,
+    content,
+    timestamp: new Date().toISOString(),
+    read: false,
+    type: 'text'
+  };
+  onSendMessage(message);
+};
+```
+
+#### Data Flow:
+1. **Team data** loaded from employee directory
+2. **Real-time messaging** via WebSocket connections
+3. **File uploads** handled with cloud storage
+4. **Collaboration events** tracked for analytics
+
+---
+
+### 10. Training & Development
+**Location**: `src/components/employee/TrainingDevelopment.tsx`
+**Route**: Accessed via employee sidebar
+
+#### Features:
+- **Course Catalog**: Available training courses and materials
+- **Learning Paths**: Structured skill development programs
+- **Progress Tracking**: Monitor course completion and scores
+- **Certifications**: Manage professional certifications
+- **Skill Assessments**: Self-assessment and manager evaluations
+- **Learning Goals**: Set and track learning objectives
+
+#### Implementation:
+```typescript
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  duration: number; // in hours
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  prerequisites: string[];
+  modules: CourseModule[];
+  certification: boolean;
+}
+
+interface LearningProgress {
+  employeeId: string;
+  courseId: string;
+  progress: number; // percentage
+  completedModules: string[];
+  startDate: string;
+  completionDate?: string;
+  score?: number;
+  certificate?: string;
+}
+
+// Course enrollment
+const enrollInCourse = (courseId: string) => {
+  const enrollment: LearningProgress = {
+    employeeId: profile.id,
+    courseId,
+    progress: 0,
+    completedModules: [],
+    startDate: new Date().toISOString()
+  };
+  onEnrollCourse(enrollment);
+};
+```
+
+#### Data Flow:
+1. **Course catalog** loaded from training database
+2. **Enrollment tracking** managed per employee
+3. **Progress updates** saved as modules are completed
+4. **Certificates generated** upon course completion
+
+---
+
+### 11. Expense Management
+**Location**: `src/components/employee/ExpenseManagement.tsx`
+**Route**: Accessed via employee sidebar
+
+#### Features:
+- **Expense Submission**: Submit business expenses with receipts
+- **Expense Categories**: Categorize expenses (travel, meals, supplies, etc.)
+- **Receipt Upload**: Photo capture and file upload for receipts
+- **Expense Reports**: Generate expense reports by period
+- **Approval Tracking**: Monitor expense approval status
+- **Reimbursement Status**: Track payment processing
+
+#### Implementation:
+```typescript
+interface Expense {
+  id: string;
+  employeeId: string;
+  category: 'travel' | 'meals' | 'supplies' | 'software' | 'other';
+  amount: number;
+  currency: string;
+  date: string;
+  description: string;
+  receipt?: string; // file URL
+  status: 'draft' | 'submitted' | 'approved' | 'rejected' | 'paid';
+  submittedAt?: string;
+  approvedAt?: string;
+  managerComment?: string;
+}
+
+// Expense submission
+const submitExpense = (expenseData: Omit<Expense, 'id' | 'status' | 'submittedAt'>) => {
+  const expense: Expense = {
+    ...expenseData,
+    id: `exp-${Date.now()}`,
+    status: 'submitted',
+    submittedAt: new Date().toISOString()
+  };
+  onSubmitExpense(expense);
+};
+```
+
+#### Data Flow:
+1. **Expense entry** with receipt upload
+2. **Manager approval** workflow
+3. **Finance processing** for reimbursement
+4. **Status updates** throughout the process
+
+---
+
+### 12. Document Center
+**Location**: `src/components/employee/DocumentCenter.tsx`
+**Route**: Accessed via employee sidebar
+
+#### Features:
+- **Personal Documents**: Store personal work documents
+- **Company Policies**: Access company handbook and policies
+- **Forms & Templates**: Download common forms and templates
+- **Document Sharing**: Share documents with team members
+- **Version Control**: Track document versions and changes
+- **Document Search**: Search through document library
+
+#### Implementation:
+```typescript
+interface Document {
+  id: string;
+  name: string;
+  type: 'pdf' | 'doc' | 'xlsx' | 'ppt' | 'image' | 'other';
+  category: 'personal' | 'policy' | 'form' | 'template' | 'shared';
+  size: number;
+  uploadedBy: string;
+  uploadedAt: string;
+  lastModified: string;
+  url: string;
+  tags: string[];
+  shared: boolean;
+  sharedWith: string[];
+}
+
+// Document upload
+const uploadDocument = async (file: File, category: string) => {
+  const document: Document = {
+    id: `doc-${Date.now()}`,
+    name: file.name,
+    type: file.type.split('/')[1] as any,
+    category: category as any,
+    size: file.size,
+    uploadedBy: profile.id,
+    uploadedAt: new Date().toISOString(),
+    lastModified: new Date().toISOString(),
+    url: await uploadFile(file),
+    tags: [],
+    shared: false,
+    sharedWith: []
+  };
+  onUploadDocument(document);
+};
+```
+
+#### Data Flow:
+1. **File upload** to cloud storage
+2. **Document metadata** saved to database
+3. **Search indexing** for document discovery
+4. **Access control** based on sharing settings
+
+---
+
 ## 🔄 Shared Operations & Data Flow
 
 ### Authentication System

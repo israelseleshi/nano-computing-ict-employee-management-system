@@ -107,7 +107,7 @@ export default function AddEmployee({ onAddEmployee }: AddEmployeeProps) {
     <div className="flex justify-center">
       <div className="max-w-2xl w-full animate-fade-in">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Add New Employee</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Add New Employee</h2>
         <p className="text-gray-600">Enter employee details to add them to the system</p>
       </div>
 

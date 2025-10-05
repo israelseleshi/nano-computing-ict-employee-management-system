@@ -55,7 +55,7 @@ export default function SendEmail({ employees, tickets }: SendEmailProps) {
   return (
     <div className="max-w-4xl animate-fade-in">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Send Daily Email Report</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Send Daily Email Report</h2>
         <p className="text-gray-600">Generate and send daily work reports via email</p>
       </div>
 

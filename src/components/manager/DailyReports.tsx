@@ -49,7 +49,7 @@ export default function DailyReports({ employees, tickets }: DailyReportsProps) 
   return (
     <div className="animate-fade-in">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Daily Reports</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Daily Reports</h2>
         <p className="text-gray-600">View and export daily work reports by date</p>
       </div>
 

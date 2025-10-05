@@ -68,7 +68,7 @@ export default function Dashboard({ employees, tickets }: DashboardProps) {
   return (
     <div className="space-y-6 animate-fade-in">
       <div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Dashboard Overview</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Dashboard Overview</h2>
         <p className="text-gray-600">Welcome to Nano Computing ICT Employee Management System</p>
       </div>
 

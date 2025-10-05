@@ -1,7 +1,7 @@
-import { LayoutDashboard, FileText, Menu, LogOut, Target, Calendar, Bell } from 'lucide-react';
+import { LayoutDashboard, FileText, Menu, LogOut, Target, Calendar, Bell, User, Plane } from 'lucide-react';
 import { useState } from 'react';
 
-type EmployeeViewType = 'dashboard' | 'timesheet' | 'goals' | 'calendar' | 'notifications';
+type EmployeeViewType = 'dashboard' | 'timesheet' | 'goals' | 'calendar' | 'notifications' | 'profile' | 'leave';
 
 interface EmployeeSidebarProps {
   activeView: EmployeeViewType;
@@ -15,6 +15,8 @@ export default function EmployeeSidebar({ activeView, onViewChange, onLogout }: 
   const menuItems = [
     { id: 'dashboard' as EmployeeViewType, label: 'Dashboard', icon: LayoutDashboard },
     { id: 'timesheet' as EmployeeViewType, label: 'My Timesheet', icon: FileText },
+    { id: 'profile' as EmployeeViewType, label: 'Profile Management', icon: User },
+    { id: 'leave' as EmployeeViewType, label: 'Leave Management', icon: Plane },
     { id: 'goals' as EmployeeViewType, label: 'Goals & Performance', icon: Target },
     { id: 'calendar' as EmployeeViewType, label: 'Calendar & Schedule', icon: Calendar },
     { id: 'notifications' as EmployeeViewType, label: 'Notifications', icon: Bell }

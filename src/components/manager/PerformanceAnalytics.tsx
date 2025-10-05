@@ -123,7 +123,7 @@ export default function PerformanceAnalytics({ employees, tickets }: Performance
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Performance Analytics</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Performance Analytics</h1>
           <p className="text-gray-600 mt-2">Track employee productivity and performance metrics</p>
         </div>
       </div>
@@ -162,43 +162,43 @@ export default function PerformanceAnalytics({ employees, tickets }: Performance
 
       {/* Overview Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Users className="w-8 h-8 text-blue-500" />
             <div>
               <p className="text-blue-600 text-sm font-medium">Total Employees</p>
               <p className="text-2xl font-bold text-blue-900">{totalEmployees}</p>
             </div>
-            <Users className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Clock className="w-8 h-8 text-green-500" />
             <div>
               <p className="text-green-600 text-sm font-medium">Total Hours</p>
               <p className="text-2xl font-bold text-green-900">{totalHours.toFixed(1)}h</p>
             </div>
-            <Clock className="w-8 h-8 text-green-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <DollarSign className="w-8 h-8 text-purple-500" />
             <div>
               <p className="text-purple-600 text-sm font-medium">Total Earnings</p>
               <p className="text-2xl font-bold text-purple-900">ETB {totalEarnings.toFixed(0)}</p>
             </div>
-            <DollarSign className="w-8 h-8 text-purple-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <BarChart3 className="w-8 h-8 text-orange-500" />
             <div>
               <p className="text-orange-600 text-sm font-medium">Avg Hours/Employee</p>
               <p className="text-2xl font-bold text-orange-900">{avgProductivity.toFixed(1)}h</p>
             </div>
-            <BarChart3 className="w-8 h-8 text-orange-500" />
           </div>
         </div>
       </div>
@@ -213,7 +213,7 @@ export default function PerformanceAnalytics({ employees, tickets }: Performance
           <div className="space-y-4">
             {topPerformers.map((performer, index) => (
               <div key={performer.employee.id} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full text-white font-bold text-sm">
+                <div className="flex items-center justify-center w-8 h-8 bg-yellow-500 rounded-full text-white font-bold text-sm">
                   #{index + 1}
                 </div>
                 <div className="flex-1">
@@ -245,7 +245,7 @@ export default function PerformanceAnalytics({ employees, tickets }: Performance
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 h-2 rounded-full transition-all duration-300"
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${Math.min((dept.avgHours / 50) * 100, 100)}%` }}
                   />
                 </div>
@@ -289,7 +289,7 @@ export default function PerformanceAnalytics({ employees, tickets }: Performance
                 <tr key={performance.employee.id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
                         {performance.employee.name.charAt(0)}
                       </div>
                       <div>

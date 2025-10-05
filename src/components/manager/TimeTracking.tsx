@@ -114,7 +114,7 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Time Tracking</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Time Tracking</h1>
           <p className="text-gray-600 mt-2">Monitor employee clock in/out times and working hours</p>
         </div>
         <div className="text-right">
@@ -127,43 +127,43 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Play className="w-8 h-8 text-blue-500" />
             <div>
               <p className="text-blue-600 text-sm font-medium">Active Now</p>
               <p className="text-2xl font-bold text-blue-900">{activeEntries.length}</p>
             </div>
-            <Play className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-green-50 rounded-xl border border-green-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Square className="w-8 h-8 text-green-500" />
             <div>
               <p className="text-green-600 text-sm font-medium">Completed Today</p>
               <p className="text-2xl font-bold text-green-900">{completedEntries.length}</p>
             </div>
-            <Square className="w-8 h-8 text-green-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-purple-50 rounded-xl border border-purple-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Timer className="w-8 h-8 text-purple-500" />
             <div>
               <p className="text-purple-600 text-sm font-medium">Total Hours</p>
               <p className="text-2xl font-bold text-purple-900">{totalHoursToday.toFixed(1)}h</p>
             </div>
-            <Timer className="w-8 h-8 text-purple-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-orange-50 rounded-xl border border-orange-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <User className="w-8 h-8 text-orange-500" />
             <div>
               <p className="text-orange-600 text-sm font-medium">Employees Worked</p>
               <p className="text-2xl font-bold text-orange-900">{totalEmployeesWorked}</p>
             </div>
-            <User className="w-8 h-8 text-orange-500" />
           </div>
         </div>
       </div>

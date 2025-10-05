@@ -74,7 +74,7 @@
   }
 
   .sidebar-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.5);
+    background: rgba(59, 130, 246, 0.6);
     border-radius: 10px;
     backdrop-filter: blur(8px);
     transition: all 0.3s ease;

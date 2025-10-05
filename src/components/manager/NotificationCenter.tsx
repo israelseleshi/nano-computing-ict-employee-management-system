@@ -178,7 +178,7 @@ export default function NotificationCenter({ employees, tickets, onSendNotificat
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Notification Center</h1>
+          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Notification Center</h1>
           <p className="text-gray-600 mt-2">Manage and send notifications to employees</p>
         </div>
         <button
@@ -192,33 +192,33 @@ export default function NotificationCenter({ employees, tickets, onSendNotificat
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <Bell className="w-8 h-8 text-blue-500" />
             <div>
               <p className="text-blue-600 text-sm font-medium">Total Notifications</p>
               <p className="text-2xl font-bold text-blue-900">{totalNotifications}</p>
             </div>
-            <Bell className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <AlertCircle className="w-8 h-8 text-orange-500" />
             <div>
               <p className="text-orange-600 text-sm font-medium">Unread</p>
               <p className="text-2xl font-bold text-orange-900">{unreadNotifications}</p>
             </div>
-            <AlertCircle className="w-8 h-8 text-orange-500" />
           </div>
         </div>
 
-        <div className="p-6 bg-gradient-to-br from-red-50 to-pink-50 rounded-xl border border-red-100">
-          <div className="flex items-center justify-between">
+        <div className="p-6">
+          <div className="flex items-center space-x-3">
+            <AlertCircle className="w-8 h-8 text-red-500" />
             <div>
               <p className="text-red-600 text-sm font-medium">High Priority</p>
               <p className="text-2xl font-bold text-red-900">{highPriorityNotifications}</p>
             </div>
-            <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
         </div>
       </div>

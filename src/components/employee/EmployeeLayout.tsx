@@ -5,10 +5,12 @@ import EmployeeTimesheet from './EmployeeTimesheet';
 import PersonalGoals from './PersonalGoals';
 import Calendar from './Calendar';
 import Notifications from './Notifications';
+import ProfileManagement from './ProfileManagement';
+import LeaveManagement from './LeaveManagement';
 import { Profile, WorkTicketDB } from '../../lib/mockAuth';
 import EmployeeSidebar from './EmployeeSidebar';
 
-type EmployeeViewType = 'dashboard' | 'timesheet' | 'goals' | 'calendar' | 'notifications';
+type EmployeeViewType = 'dashboard' | 'timesheet' | 'goals' | 'calendar' | 'notifications' | 'profile' | 'leave';
 
 interface EmployeeLayoutProps {
   profile: Profile;
@@ -19,12 +21,85 @@ interface EmployeeLayoutProps {
 export default function EmployeeLayout({ profile, tickets, onLogout }: EmployeeLayoutProps) {
   const [activeView, setActiveView] = useState<EmployeeViewType>('dashboard');
 
+  // Mock data for new features - in production, this would come from Firebase
+  const mockLeaveRequests = [
+    {
+      id: 'leave-001',
+      employeeId: profile.id,
+      employeeName: profile.full_name,
+      type: 'vacation' as const,
+      startDate: '2024-02-15',
+      endDate: '2024-02-20',
+      days: 6,
+      reason: 'Family vacation',
+      status: 'approved' as const,
+      managerComment: 'Approved. Enjoy your vacation!',
+      submittedAt: '2024-01-20T10:00:00Z'
+    }
+  ];
+
+  const mockLeaveBalance = {
+    vacation: { used: 6, available: 16, total: 22 },
+    sick: { used: 3, available: 7, total: 10 },
+    personal: { used: 0, available: 5, total: 5 },
+    emergency: { used: 0, available: 3, total: 3 }
+  };
+
+  // Handlers for new features
+  const handleUpdateProfile = (updates: any) => {
+    console.log('Profile updates:', updates);
+    // In production: update Firebase and show success message
+  };
+
+  const handleSubmitLeaveRequest = (request: any) => {
+    console.log('Leave request:', request);
+    // In production: submit to Firebase and show success message
+  };
+
   const renderView = () => {
     switch (activeView) {
       case 'dashboard':
         return <EmployeeDashboard profile={profile} tickets={tickets} />;
       case 'timesheet':
         return <EmployeeTimesheet profile={profile} tickets={tickets} />;
+      case 'profile':
+        return <ProfileManagement 
+          profile={{
+            id: profile.id,
+            name: profile.full_name,
+            email: profile.email,
+            phone: '+251911234567',
+            department: profile.department || 'Unknown Department',
+            position: profile.role || 'Employee',
+            hourlyRate: 150,
+            hireDate: '2024-01-15',
+            address: 'Addis Ababa, Ethiopia',
+            skills: ['JavaScript', 'React', 'TypeScript'],
+            emergencyContact: {
+              name: 'Emergency Contact',
+              phone: '+251911234568',
+              relationship: 'Family'
+            },
+            preferences: {
+              notifications: true,
+              language: 'en',
+              theme: 'light'
+            }
+          }}
+          onUpdateProfile={handleUpdateProfile}
+        />;
+      case 'leave':
+        return <LeaveManagement 
+          profile={{
+            id: profile.id,
+            name: profile.full_name,
+            email: profile.email,
+            department: profile.department || 'Unknown Department'
+          }}
+          leaveRequests={mockLeaveRequests}
+          leaveBalance={mockLeaveBalance}
+          onSubmitLeaveRequest={handleSubmitLeaveRequest}
+        />;
       case 'goals':
         return <PersonalGoals profile={profile} tickets={tickets} />;
       case 'calendar':
