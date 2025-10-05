@@ -1,0 +1,54 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isManager() {
+      return isAuthenticated() && request.auth.token.role == 'manager';
+    }
+    
+    function isEmployee() {
+      return isAuthenticated() && request.auth.token.role == 'employee';
+    }
+    
+    function isOwner(employeeId) {
+      return isAuthenticated() && request.auth.uid == employeeId;
+    }
+    
+    function isManagerOrOwner(employeeId) {
+      return isManager() || isOwner(employeeId);
+    }
+
+    // Manager leave requests - for manager dashboard
+    match /managerLeaveRequests/{requestId} {
+      allow read: if isManager();
+      allow create: if isEmployee() && request.auth.uid == request.resource.data.employeeId;
+      allow update: if isManager() || 
+        (isOwner(resource.data.employeeId) && resource.data.status == 'pending');
+    }
+    
+    // Employee leave balances - managers can read all, employees can read own
+    match /employeeLeaveBalances/{balanceId} {
+      allow read: if isAuthenticated() && 
+        (isManager() || request.auth.uid == resource.data.employeeId);
+      allow write: if isManager();
+    }
+    
+    // Leave settings - managers only
+    match /leaveSettings/{settingId} {
+      allow read: if isAuthenticated();
+      allow write: if isManager();
+    }
+    
+    // Leave approval history - audit trail
+    match /leaveApprovalHistory/{historyId} {
+      allow read: if isAuthenticated() && 
+        (isManager() || request.auth.uid == resource.data.employeeId);
+      allow create: if isManager() && request.auth.uid == request.resource.data.managerId;
+    }
+  }
+}

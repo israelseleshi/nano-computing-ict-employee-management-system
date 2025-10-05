@@ -196,8 +196,8 @@ export default function PayrollManagement({ employees, tickets, onGeneratePayrol
         </div>
       </div>
 
-      {/* Period Selection & Generation */}
-      <div className="p-6 bg-white rounded-xl shadow-sm border border-gray-200">
+      {/* Period Selection & Generation - Free floating */}
+      <div className="py-2">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-bold text-gray-900">Generate Payroll</h3>
           <div className="flex items-center space-x-4">
@@ -221,8 +221,8 @@ export default function PayrollManagement({ employees, tickets, onGeneratePayrol
           </div>
         </div>
 
-        {/* Tax Information */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        {/* Tax Information - Soft background without borders */}
+        <div className="bg-blue-50 rounded-lg p-4">
           <h4 className="font-semibold text-blue-900 mb-2">Ethiopian Tax & Deduction Rates</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
@@ -244,51 +244,51 @@ export default function PayrollManagement({ employees, tickets, onGeneratePayrol
       {/* Payroll Summary */}
       {showCalculations && payrollEntries.length > 0 && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-blue-600 text-sm font-medium">Total Gross Pay</p>
-                  <p className="text-2xl font-bold text-blue-900">ETB {totals.grossPay.toFixed(0)}</p>
-                </div>
-                <DollarSign className="w-8 h-8 text-blue-500" />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="flex items-start space-x-4">
+              <div className="p-3 bg-blue-50 rounded-lg flex-shrink-0">
+                <DollarSign className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-600">Total Gross Pay</p>
+                <p className="text-2xl font-bold text-gray-900">ETB {totals.grossPay.toFixed(0)}</p>
               </div>
             </div>
 
-            <div className="p-6 bg-gradient-to-br from-red-50 to-pink-50 rounded-xl border border-red-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-red-600 text-sm font-medium">Total Deductions</p>
-                  <p className="text-2xl font-bold text-red-900">ETB {totals.totalDeductions.toFixed(0)}</p>
-                </div>
-                <AlertCircle className="w-8 h-8 text-red-500" />
+            <div className="flex items-start space-x-4">
+              <div className="p-3 bg-red-50 rounded-lg flex-shrink-0">
+                <AlertCircle className="w-6 h-6 text-red-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-600">Total Deductions</p>
+                <p className="text-2xl font-bold text-gray-900">ETB {totals.totalDeductions.toFixed(0)}</p>
               </div>
             </div>
 
-            <div className="p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-green-600 text-sm font-medium">Total Net Pay</p>
-                  <p className="text-2xl font-bold text-green-900">ETB {totals.netPay.toFixed(0)}</p>
-                </div>
-                <CheckCircle className="w-8 h-8 text-green-500" />
+            <div className="flex items-start space-x-4">
+              <div className="p-3 bg-green-50 rounded-lg flex-shrink-0">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-600">Total Net Pay</p>
+                <p className="text-2xl font-bold text-gray-900">ETB {totals.netPay.toFixed(0)}</p>
               </div>
             </div>
 
-            <div className="p-6 bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl border border-purple-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-purple-600 text-sm font-medium">Total Hours</p>
-                  <p className="text-2xl font-bold text-purple-900">{totals.totalHours.toFixed(1)}h</p>
-                </div>
-                <Clock className="w-8 h-8 text-purple-500" />
+            <div className="flex items-start space-x-4">
+              <div className="p-3 bg-purple-50 rounded-lg flex-shrink-0">
+                <Clock className="w-6 h-6 text-purple-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-600">Total Hours</p>
+                <p className="text-2xl font-bold text-gray-900">{totals.totalHours.toFixed(1)}h</p>
               </div>
             </div>
           </div>
 
-          {/* Payroll Table */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          {/* Payroll Table - Free floating */}
+          <div>
+            <div className="mb-3 flex items-center justify-between">
               <h3 className="text-xl font-bold text-gray-900">Payroll Details - {selectedPeriod}</h3>
               <div className="flex space-x-2">
                 <button className="flex items-center space-x-2 px-4 py-2 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors">

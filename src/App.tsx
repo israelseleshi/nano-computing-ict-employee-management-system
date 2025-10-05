@@ -1,19 +1,13 @@
 import { useState, useEffect } from 'react';
 import { MockSession, Profile, WorkTicketDB, mockDb } from './lib/mockAuth';
 import { authService } from './lib/authService';
-import { Employee, WorkTicket, ViewType } from './lib/types';
+import { Employee, WorkTicket, ViewType, LeaveRequest } from './lib/types';
 import Login from './components/auth/Login';
-import Dashboard from './components/manager/Dashboard';
-import DailyReports from './components/manager/DailyReports';
-import SendEmail from './components/manager/SendEmail';
-import AddEmployee from './components/manager/AddEmployee';
-import CreateTicket from './components/manager/CreateTicket';
-import TicketManagement from './components/manager/TicketManagement';
-import PerformanceAnalytics from './components/manager/PerformanceAnalytics';
-import TimeTracking from './components/manager/TimeTracking';
-import PayrollManagement from './components/manager/PayrollManagement';
-import NotificationCenter from './components/manager/NotificationCenter';
-import AdvancedReports from './components/manager/AdvancedReports';
+// Premium 4-Tab Layout Components
+import OverviewTab from './components/manager/OverviewTab';
+import OperationsTab from './components/manager/OperationsTab';
+import HRFinanceTab from './components/manager/HRFinanceTab';
+import IntelligenceTab from './components/manager/IntelligenceTab';
 import Sidebar from './components/common/Sidebar';
 import Header from './components/common/Header';
 import EmployeeLayout from './components/employee/EmployeeLayout';
@@ -25,6 +19,7 @@ const mockEmployees: Employee[] = [
     name: 'John Doe',
     email: 'john@nanocomputing.com',
     department: 'Development',
+    position: 'Senior Developer',
     hourlyRate: 1500
   }
 ];
@@ -42,15 +37,48 @@ const mockTickets: WorkTicket[] = [
   }
 ];
 
+// Mock leave requests data
+const mockLeaveRequests: LeaveRequest[] = [
+  {
+    id: 'leave-001',
+    employeeId: 'emp-1',
+    employeeName: 'John Doe',
+    employeeDepartment: 'Development',
+    type: 'vacation',
+    startDate: '2024-02-15',
+    endDate: '2024-02-20',
+    days: 6,
+    reason: 'Family vacation to Bahir Dar',
+    status: 'pending',
+    submittedAt: '2024-01-20T10:00:00Z'
+  },
+  {
+    id: 'leave-002',
+    employeeId: 'emp-1',
+    employeeName: 'John Doe',
+    employeeDepartment: 'Development',
+    type: 'sick',
+    startDate: '2024-01-10',
+    endDate: '2024-01-12',
+    days: 3,
+    reason: 'Flu symptoms and recovery',
+    status: 'approved',
+    managerComment: 'Get well soon. Take care of your health.',
+    submittedAt: '2024-01-09T08:00:00Z',
+    approvedAt: '2024-01-09T09:15:00Z'
+  }
+];
+
 function App() {
   const [session, setSession] = useState<MockSession | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<ViewType>('dashboard');
+  const [activeView, setActiveView] = useState<ViewType>('overview');
   const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
   const [tickets, setTickets] = useState<WorkTicket[]>(mockTickets);
   const [dbTickets, setDbTickets] = useState<WorkTicketDB[]>([]);
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(mockLeaveRequests);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
@@ -208,6 +236,23 @@ function App() {
     // In a real app, this would update in database
   };
 
+  // Leave management handlers
+  const handleUpdateLeaveStatus = (requestId: string, status: 'approved' | 'rejected', comment?: string) => {
+    setLeaveRequests(prevRequests => 
+      prevRequests.map(request => 
+        request.id === requestId 
+          ? { 
+              ...request, 
+              status, 
+              managerComment: comment,
+              approvedAt: status === 'approved' ? new Date().toISOString() : request.approvedAt,
+              rejectedAt: status === 'rejected' ? new Date().toISOString() : request.rejectedAt
+            }
+          : request
+      )
+    );
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -247,30 +292,54 @@ function App() {
 
   const renderView = () => {
     switch (activeView) {
-      case 'dashboard':
-        return <Dashboard employees={employees} tickets={tickets} />;
-      case 'add-employee':
-        return <AddEmployee onAddEmployee={handleAddEmployee} />;
-      case 'create-ticket':
-        return <CreateTicket employees={employees} onCreateTicket={handleCreateTicket} />;
-      case 'ticket-management':
-        return <TicketManagement employees={employees} tickets={tickets} onUpdateTicketStatus={handleUpdateTicketStatus} />;
-      case 'time-tracking':
-        return <TimeTracking employees={employees} tickets={tickets} onCreateTimeEntry={handleCreateTimeEntry} onUpdateTimeEntry={handleUpdateTimeEntry} />;
-      case 'payroll-management':
-        return <PayrollManagement employees={employees} tickets={tickets} onGeneratePayroll={handleGeneratePayroll} onUpdatePayrollStatus={handleUpdatePayrollStatus} />;
-      case 'notification-center':
-        return <NotificationCenter employees={employees} tickets={tickets} onSendNotification={handleSendNotification} onMarkAsRead={handleMarkAsRead} />;
-      case 'advanced-reports':
-        return <AdvancedReports employees={employees} tickets={tickets} />;
-      case 'performance-analytics':
-        return <PerformanceAnalytics employees={employees} tickets={tickets} />;
-      case 'reports':
-        return <DailyReports employees={employees} tickets={tickets} />;
-      case 'send-email':
-        return <SendEmail employees={employees} tickets={tickets} />;
+      case 'overview':
+        return (
+          <OverviewTab
+            employees={employees}
+            tickets={tickets}
+            onSendNotification={handleSendNotification}
+            onMarkAsRead={handleMarkAsRead}
+          />
+        );
+      case 'operations':
+        return (
+          <OperationsTab
+            employees={employees}
+            tickets={tickets}
+            leaveRequests={leaveRequests}
+            onCreateTicket={handleCreateTicket}
+            onUpdateTicketStatus={handleUpdateTicketStatus}
+            onCreateTimeEntry={handleCreateTimeEntry}
+            onUpdateTimeEntry={handleUpdateTimeEntry}
+            onUpdateLeaveStatus={handleUpdateLeaveStatus}
+          />
+        );
+      case 'hr-finance':
+        return (
+          <HRFinanceTab
+            employees={employees}
+            tickets={tickets}
+            onAddEmployee={handleAddEmployee}
+            onGeneratePayroll={handleGeneratePayroll}
+            onUpdatePayrollStatus={handleUpdatePayrollStatus}
+          />
+        );
+      case 'intelligence':
+        return (
+          <IntelligenceTab
+            employees={employees}
+            tickets={tickets}
+          />
+        );
       default:
-        return <Dashboard employees={employees} tickets={tickets} />;
+        return (
+          <OverviewTab
+            employees={employees}
+            tickets={tickets}
+            onSendNotification={handleSendNotification}
+            onMarkAsRead={handleMarkAsRead}
+          />
+        );
     }
   };
 

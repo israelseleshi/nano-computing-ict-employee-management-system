@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calendar, Clock, FileText, CheckCircle2, User } from 'lucide-react';
+import { Calendar, Clock, FileText, CheckCircle2, User, ChevronDown } from 'lucide-react';
 import { Employee } from '../../lib/types';
 
 interface CreateTicketProps {
@@ -151,11 +151,12 @@ export default function CreateTicket({ employees, onCreateTicket }: CreateTicket
             </label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
               <select
                 required
                 value={formData.employeeId}
                 onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all appearance-none bg-white ${
+                className={`w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-all appearance-none bg-white ${
                   errors.employeeId 
                     ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
                     : 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'

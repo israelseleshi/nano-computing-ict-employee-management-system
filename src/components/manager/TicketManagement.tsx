@@ -85,60 +85,117 @@ export default function TicketManagement({ employees, tickets, onUpdateTicketSta
   const rejectedTickets = tickets.filter(t => t.status === 'rejected').length;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Ticket Management</h1>
-          <p className="text-gray-600 mt-2">Review and manage employee work tickets</p>
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      {/* Mobile: Compact 2x2 Stats Grid, Desktop: Header + 4-column grid */}
+      <div className="sm:hidden">
+        {/* Mobile 2x2 Stats Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-blue-100 rounded-lg">
+                  <FileText className="w-4 h-4 text-blue-600" />
+                </div>
+                <p className="text-blue-600 text-xs font-medium">Total</p>
+              </div>
+              <p className="text-xl font-bold text-blue-900">{totalTickets}</p>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-yellow-100 rounded-lg">
+                  <Clock className="w-4 h-4 text-yellow-600" />
+                </div>
+                <p className="text-yellow-600 text-xs font-medium">Pending</p>
+              </div>
+              <p className="text-xl font-bold text-yellow-900">{pendingTickets}</p>
+            </div>
+          </div>
+
+          <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-green-100 rounded-lg">
+                  <CheckCircle className="w-4 h-4 text-green-600" />
+                </div>
+                <p className="text-green-600 text-xs font-medium">Approved</p>
+              </div>
+              <p className="text-xl font-bold text-green-900">{approvedTickets}</p>
+            </div>
+          </div>
+
+          <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-red-100 rounded-lg">
+                  <XCircle className="w-4 h-4 text-red-600" />
+                </div>
+                <p className="text-red-600 text-xs font-medium">Rejected</p>
+              </div>
+              <p className="text-xl font-bold text-red-900">{rejectedTickets}</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <FileText className="w-8 h-8 text-blue-500" />
-            <div>
-              <p className="text-blue-600 text-sm font-medium">Total Tickets</p>
-              <p className="text-2xl font-bold text-blue-900">{totalTickets}</p>
-            </div>
+      {/* Desktop Layout */}
+      <div className="hidden sm:block">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Ticket Management</h1>
+            <p className="text-gray-600 mt-2">Review and manage employee work tickets</p>
           </div>
         </div>
 
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <Clock className="w-8 h-8 text-yellow-500" />
-            <div>
-              <p className="text-yellow-600 text-sm font-medium">Pending</p>
-              <p className="text-2xl font-bold text-yellow-900">{pendingTickets}</p>
+        {/* Statistics Cards - Free floating style like image 5 */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-blue-50 rounded-lg flex-shrink-0">
+              <FileText className="w-6 h-6 text-blue-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Total Requests</p>
+              <p className="text-2xl font-bold text-gray-900">{totalTickets}</p>
             </div>
           </div>
-        </div>
 
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <CheckCircle className="w-8 h-8 text-green-500" />
-            <div>
-              <p className="text-green-600 text-sm font-medium">Approved</p>
-              <p className="text-2xl font-bold text-green-900">{approvedTickets}</p>
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-yellow-50 rounded-lg flex-shrink-0">
+              <Clock className="w-6 h-6 text-yellow-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Pending</p>
+              <p className="text-2xl font-bold text-gray-900">{pendingTickets}</p>
             </div>
           </div>
-        </div>
 
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <XCircle className="w-8 h-8 text-red-500" />
-            <div>
-              <p className="text-red-600 text-sm font-medium">Rejected</p>
-              <p className="text-2xl font-bold text-red-900">{rejectedTickets}</p>
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-green-50 rounded-lg flex-shrink-0">
+              <CheckCircle className="w-6 h-6 text-green-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Approved</p>
+              <p className="text-2xl font-bold text-gray-900">{approvedTickets}</p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-red-50 rounded-lg flex-shrink-0">
+              <XCircle className="w-6 h-6 text-red-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Rejected</p>
+              <p className="text-2xl font-bold text-gray-900">{rejectedTickets}</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Filter Controls */}
-      <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+      {/* Filter Controls - Free floating */}
+      <div className="flex items-center space-x-4 py-2">
         <Filter className="w-5 h-5 text-gray-500" />
         <span className="text-sm font-medium text-gray-700">Filter by status:</span>
         <div className="flex space-x-2">
@@ -148,8 +205,8 @@ export default function TicketManagement({ employees, tickets, onUpdateTicketSta
               onClick={() => setStatusFilter(status as any)}
               className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
                 statusFilter === status
-                  ? 'bg-cyan-500 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-100'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
               }`}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}

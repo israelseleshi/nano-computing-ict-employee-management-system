@@ -72,44 +72,63 @@ export default function Dashboard({ employees, tickets }: DashboardProps) {
         <p className="text-gray-600">Welcome to Nano Computing ICT Employee Management System</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Mobile-First Responsive Grid */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <div
               key={index}
-              className="p-6 animate-scale-in"
+              className="animate-scale-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className={`${stat.bgColor} p-3 rounded-lg`}>
-                  <Icon className={`w-6 h-6 ${stat.textColor}`} />
+              {/* Mobile: Compact horizontal layout, Desktop: Vertical layout */}
+              <div className="flex items-center justify-between sm:flex-col sm:items-start sm:space-y-3 lg:flex-row lg:items-start lg:space-y-0 lg:space-x-4">
+                {/* Icon and Label Container */}
+                <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-0 lg:flex-col lg:items-start">
+                  <div className={`${stat.bgColor} p-2 sm:p-3 rounded-lg flex-shrink-0`}>
+                    <Icon className={`w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 ${stat.textColor}`} />
+                  </div>
+                  {/* Title - Hidden on mobile, shown on larger screens */}
+                  <h3 className="hidden sm:block text-gray-600 text-xs sm:text-sm font-medium leading-tight lg:mt-2">
+                    {stat.title}
+                  </h3>
+                </div>
+                
+                {/* Value - Prominent on mobile */}
+                <div className="text-right sm:text-left lg:flex-1 lg:min-w-0">
+                  {/* Mobile title above value */}
+                  <h3 className="block sm:hidden text-gray-600 text-xs font-medium mb-1 leading-tight">
+                    {stat.title}
+                  </h3>
+                  <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 leading-none">
+                    {stat.value}
+                  </p>
                 </div>
               </div>
-              <h3 className="text-gray-600 text-sm font-medium mb-1">{stat.title}</h3>
-              <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
             </div>
           );
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">Recent Work Tickets</h3>
-          <div className="space-y-3">
+      {/* Mobile: Single column with extra spacing, Desktop: Two columns */}
+      <div className="mt-8 sm:mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        <div className="px-0 sm:p-6">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Recent Work Tickets</h3>
+          <div className="space-y-2 sm:space-y-3">
             {recentTickets.map((ticket) => {
               const employee = employees.find(e => e.id === ticket.employeeId);
               return (
                 <div
                   key={ticket.id}
-                  className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-start space-x-3 p-3 sm:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                     {employee?.name.charAt(0)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900">{employee?.name}</p>
-                    <p className="text-sm text-gray-600">{ticket.description}</p>
+                    <p className="font-semibold text-gray-900 text-sm sm:text-base">{employee?.name}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 leading-tight">{ticket.description}</p>
                     <p className="text-xs text-gray-500 mt-1">
                       {ticket.date} • {ticket.startTime} - {ticket.endTime}
                     </p>

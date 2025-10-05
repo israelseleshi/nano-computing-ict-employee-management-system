@@ -27,3 +27,5 @@ firebase-service-account-key.json
 *-service-account-key.json
 *-firebase-adminsdk-*.json
 nanocomputingict-*.json
+firebase/firebase-service-account-key.json
+firebase/*-firebase-adminsdk-*.json

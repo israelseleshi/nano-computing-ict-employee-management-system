@@ -1,4 +1,4 @@
-import { Menu, Home, Users, FileText, BarChart3, Mail, LogOut, CheckSquare, TrendingUp, Clock, DollarSign, Bell, PieChart } from 'lucide-react';
+import { Menu, Home, Settings, Users, LogOut, TrendingUp } from 'lucide-react';
 import { ViewType } from '../../lib/types';
 
 interface SidebarProps {
@@ -12,17 +12,30 @@ interface SidebarProps {
 export default function Sidebar({ activeView, onViewChange, onLogout, isCollapsed, onToggleCollapse }: SidebarProps) {
 
   const menuItems = [
-    { id: 'dashboard' as ViewType, label: 'Dashboard', icon: Home },
-    { id: 'add-employee' as ViewType, label: 'Add Employee', icon: Users },
-    { id: 'create-ticket' as ViewType, label: 'Create Work Ticket', icon: FileText },
-    { id: 'ticket-management' as ViewType, label: 'Ticket Management', icon: CheckSquare },
-    { id: 'time-tracking' as ViewType, label: 'Time Tracking', icon: Clock },
-    { id: 'payroll-management' as ViewType, label: 'Payroll Management', icon: DollarSign },
-    { id: 'notification-center' as ViewType, label: 'Notification Center', icon: Bell },
-    { id: 'advanced-reports' as ViewType, label: 'Advanced Reports', icon: PieChart },
-    { id: 'performance-analytics' as ViewType, label: 'Performance Analytics', icon: TrendingUp },
-    { id: 'reports' as ViewType, label: 'Daily Reports', icon: BarChart3 },
-    { id: 'send-email' as ViewType, label: 'Send Daily Email', icon: Mail }
+    { 
+      id: 'overview' as ViewType, 
+      label: 'Overview', 
+      icon: Home,
+      description: 'Dashboard & Notifications'
+    },
+    { 
+      id: 'operations' as ViewType, 
+      label: 'Operations', 
+      icon: Settings,
+      description: 'Tickets, Time & Leave'
+    },
+    { 
+      id: 'hr-finance' as ViewType, 
+      label: 'HR & Finance', 
+      icon: Users,
+      description: 'Employees & Payroll'
+    },
+    { 
+      id: 'intelligence' as ViewType, 
+      label: 'Intelligence', 
+      icon: TrendingUp,
+      description: 'Reports & Analytics'
+    }
   ];
 
   return (
@@ -57,8 +70,8 @@ export default function Sidebar({ activeView, onViewChange, onLogout, isCollapse
           </div>
         </div>
 
-        {/* Navigation Menu */}
-        <nav className="flex-1 py-4 space-y-2 overflow-y-auto sidebar-scrollbar">
+        {/* Premium Navigation Menu */}
+        <nav className="flex-1 py-6 px-0 space-y-1 overflow-y-auto">
           {menuItems.map((item) => {
             const isActive = activeView === item.id;
             const IconComponent = item.icon;
@@ -66,31 +79,44 @@ export default function Sidebar({ activeView, onViewChange, onLogout, isCollapse
               <button
                 key={item.id}
                 onClick={() => onViewChange(item.id)}
-                className={`w-full flex items-center text-left transition-all duration-200 group ${
+                className={`w-full flex items-center text-left transition-all duration-300 ease-out group ${
                   isActive
-                    ? 'bg-blue-600 text-white shadow-lg py-3'
-                    : 'text-gray-700 hover:bg-gray-100 py-3 px-4'
+                    ? 'bg-blue-500 text-white shadow-lg py-4 px-4'
+                    : 'text-gray-700 hover:bg-gray-100 py-4 px-4'
                 }`}
                 title={isCollapsed ? item.label : ''}
               >
-                <IconComponent className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white ml-4' : 'text-gray-600'} ${isCollapsed && !isActive ? 'ml-0' : ''}`} />
-                {!isCollapsed && (
-                  <span className={`font-medium ml-3 ${isActive ? 'text-white' : 'text-gray-700'}`}>{item.label}</span>
-                )}
+                <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : ''}`}>
+                  <IconComponent className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white' : 'text-gray-600 group-hover:text-gray-700'}`} />
+                  {!isCollapsed && (
+                    <div className="ml-3 flex-1">
+                      <div className={`font-medium text-sm ${isActive ? 'text-white' : 'text-gray-800 group-hover:text-gray-900'}`}>
+                        {item.label}
+                      </div>
+                      <div className={`text-xs mt-0.5 ${isActive ? 'text-blue-100' : 'text-gray-500 group-hover:text-gray-600'}`}>
+                        {item.description}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </button>
             );
           })}
         </nav>
 
-        {/* Logout Button */}
-        <div className="p-4 border-t border-gray-200">
+        {/* Premium Logout Button */}
+        <div className="border-t border-gray-100">
           <button
             onClick={onLogout}
-            className={`w-full flex items-center ${isCollapsed ? 'justify-center px-4 rounded-lg' : 'space-x-3 px-0 ml-0 mr-0'} py-3 transition-all duration-200 bg-red-500 hover:bg-red-600 text-white shadow-lg hover:shadow-red-500/30`}
+            className="w-full flex items-center py-4 px-4 bg-red-500 hover:bg-red-600 text-white transition-all duration-300"
             title={isCollapsed ? 'Logout' : ''}
           >
-            <LogOut className={`w-5 h-5 flex-shrink-0 ${isCollapsed ? '' : 'ml-4'}`} />
-            {!isCollapsed && <span className="font-medium">Logout</span>}
+            <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : ''}`}>
+              <LogOut className="w-5 h-5 flex-shrink-0 text-white" />
+              {!isCollapsed && (
+                <span className="ml-3 font-medium text-sm">Logout</span>
+              )}
+            </div>
           </button>
         </div>
       </div>

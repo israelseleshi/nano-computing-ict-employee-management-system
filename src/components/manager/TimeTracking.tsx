@@ -110,59 +110,191 @@ export default function TimeTracking({ employees, onCreateTimeEntry, onUpdateTim
   const totalEmployeesWorked = new Set(completedEntries.map(e => e.employeeId)).size;
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Time Tracking</h1>
-          <p className="text-gray-600 mt-2">Monitor employee clock in/out times and working hours</p>
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
+      {/* Mobile: Compact 2x2 Metrics Grid, Desktop: Header + 4-column grid */}
+      <div className="sm:hidden">
+        {/* Mobile 2x2 Metrics Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-blue-100 rounded-lg">
+                  <Play className="w-4 h-4 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-blue-600 text-xs font-medium">Active Now</p>
+                </div>
+              </div>
+              <p className="text-xl font-bold text-blue-900">{activeEntries.length}</p>
+            </div>
+          </div>
+
+          <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-green-100 rounded-lg">
+                  <Square className="w-4 h-4 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-green-600 text-xs font-medium">Completed</p>
+                </div>
+              </div>
+              <p className="text-xl font-bold text-green-900">{completedEntries.length}</p>
+            </div>
+          </div>
+
+          <div className="bg-purple-50 rounded-lg p-3 border border-purple-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-purple-100 rounded-lg">
+                  <Timer className="w-4 h-4 text-purple-600" />
+                </div>
+                <div>
+                  <p className="text-purple-600 text-xs font-medium">Total Hours</p>
+                </div>
+              </div>
+              <p className="text-xl font-bold text-purple-900">{totalHoursToday.toFixed(1)}h</p>
+            </div>
+          </div>
+
+          <div className="bg-orange-50 rounded-lg p-3 border border-orange-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="p-1.5 bg-orange-100 rounded-lg">
+                  <User className="w-4 h-4 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-orange-600 text-xs font-medium">Employees</p>
+                </div>
+              </div>
+              <p className="text-xl font-bold text-orange-900">{totalEmployeesWorked}</p>
+            </div>
+          </div>
         </div>
-        <div className="text-right">
-          <p className="text-sm text-gray-500">Current Time</p>
-          <p className="text-2xl font-bold text-gray-900">
-            {currentTime.toLocaleTimeString()}
-          </p>
+
+        {/* Mobile: Consolidated Clock In/Out Card */}
+        <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-gray-900">Time Control</h3>
+            <div className="text-right">
+              <p className="text-xs text-gray-500">Current Time</p>
+              <p className="text-lg font-bold text-gray-900">
+                {currentTime.toLocaleTimeString()}
+              </p>
+            </div>
+          </div>
+          
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Date</label>
+              <div className="relative">
+                <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Employee</label>
+              <div className="relative">
+                <User className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <select
+                  value={selectedEmployee}
+                  onChange={(e) => setSelectedEmployee(e.target.value)}
+                  className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent appearance-none bg-white"
+                >
+                  <option value="">Select Employee</option>
+                  {employees.map((employee) => (
+                    <option key={employee.id} value={employee.id}>
+                      {employee.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {selectedEmployee && (
+              <div className="pt-2">
+                {getActiveEntry(selectedEmployee) ? (
+                  <button
+                    onClick={() => handleClockOut(selectedEmployee)}
+                    className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-300"
+                  >
+                    Clock Out
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleClockIn}
+                    className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-300"
+                  >
+                    Clock In
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <Play className="w-8 h-8 text-blue-500" />
-            <div>
-              <p className="text-blue-600 text-sm font-medium">Active Now</p>
-              <p className="text-2xl font-bold text-blue-900">{activeEntries.length}</p>
-            </div>
+      {/* Desktop Layout */}
+      <div className="hidden sm:block">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Time Tracking</h1>
+            <p className="text-gray-600 mt-2">Monitor employee clock in/out times and working hours</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-gray-500">Current Time</p>
+            <p className="text-2xl font-bold text-gray-900">
+              {currentTime.toLocaleTimeString()}
+            </p>
           </div>
         </div>
 
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <Square className="w-8 h-8 text-green-500" />
-            <div>
-              <p className="text-green-600 text-sm font-medium">Completed Today</p>
-              <p className="text-2xl font-bold text-green-900">{completedEntries.length}</p>
+        {/* Statistics Cards - Free floating style like image 5 */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-6">
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-blue-50 rounded-lg flex-shrink-0">
+              <Play className="w-6 h-6 text-blue-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Active Now</p>
+              <p className="text-2xl font-bold text-gray-900">{activeEntries.length}</p>
             </div>
           </div>
-        </div>
 
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <Timer className="w-8 h-8 text-purple-500" />
-            <div>
-              <p className="text-purple-600 text-sm font-medium">Total Hours</p>
-              <p className="text-2xl font-bold text-purple-900">{totalHoursToday.toFixed(1)}h</p>
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-green-50 rounded-lg flex-shrink-0">
+              <Square className="w-6 h-6 text-green-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Completed</p>
+              <p className="text-2xl font-bold text-gray-900">{completedEntries.length}</p>
             </div>
           </div>
-        </div>
 
-        <div className="p-6">
-          <div className="flex items-center space-x-3">
-            <User className="w-8 h-8 text-orange-500" />
-            <div>
-              <p className="text-orange-600 text-sm font-medium">Employees Worked</p>
-              <p className="text-2xl font-bold text-orange-900">{totalEmployeesWorked}</p>
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-purple-50 rounded-lg flex-shrink-0">
+              <Timer className="w-6 h-6 text-purple-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Total Hours</p>
+              <p className="text-2xl font-bold text-gray-900">{totalHoursToday.toFixed(1)}h</p>
+            </div>
+          </div>
+
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-orange-50 rounded-lg flex-shrink-0">
+              <User className="w-6 h-6 text-orange-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-600 mb-1">Employees</p>
+              <p className="text-2xl font-bold text-gray-900">{totalEmployeesWorked}</p>
             </div>
           </div>
         </div>

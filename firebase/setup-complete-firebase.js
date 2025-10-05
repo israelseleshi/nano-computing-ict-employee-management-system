@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Initialize Firebase Admin SDK
-const serviceAccount = JSON.parse(fs.readFileSync('./firebase-service-account-key.json', 'utf8'));
+const serviceAccount = JSON.parse(fs.readFileSync('./firebase/firebase-service-account-key.json', 'utf8'));
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

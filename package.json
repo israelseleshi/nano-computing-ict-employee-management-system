@@ -9,14 +9,15 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "setup-firebase": "node setup-firebase-collections.js",
-    "setup-complete-firebase": "node setup-complete-firebase.js",
+    "setup-firebase": "node firebase/setup-firebase-collections.js",
+    "setup-complete-firebase": "node firebase/setup-complete-firebase.js",
     "deploy-rules": "firebase deploy --only firestore:rules",
     "deploy-indexes": "firebase deploy --only firestore:indexes",
     "deploy-firestore": "firebase deploy --only firestore",
     "test-rules": "firebase firestore:rules validate",
     "emulator": "firebase emulators:start --only firestore",
-    "setup-employee-features": "node setup-employee-features.js"
+    "setup-employee-features": "node firebase/setup-employee-features.js",
+    "setup-leave-management": "node firebase/setup-leave-management.js"
   },
   "dependencies": {
     "firebase": "^12.3.0",

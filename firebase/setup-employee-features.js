@@ -5,13 +5,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
 // Get current directory for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Initialize Firebase Admin SDK
-const serviceAccount = JSON.parse(fs.readFileSync('./nanocomputingict-867d1-firebase-adminsdk-fbsvc-0b2f80ea57.json', 'utf8'));
+const serviceAccount = JSON.parse(fs.readFileSync('./firebase/firebase-service-account-key.json', 'utf8'));
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
