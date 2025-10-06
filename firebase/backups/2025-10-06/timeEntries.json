@@ -1,0 +1,16 @@
+[
+  {
+    "id": "time-demo-1",
+    "data": {
+      "id": "time-demo-1",
+      "employeeId": "emp-1",
+      "employeeName": "John Doe",
+      "clockIn": "09:00",
+      "clockOut": "17:00",
+      "date": "2024-01-15",
+      "status": "completed",
+      "location": "Office",
+      "totalHours": 8
+    }
+  }
+]

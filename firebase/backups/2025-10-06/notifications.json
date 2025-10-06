@@ -1,0 +1,28 @@
+[
+  {
+    "id": "notification-001",
+    "data": {
+      "id": "notification-001",
+      "user_id": "employee-demo-001",
+      "type": "ticket_approved",
+      "title": "Work Ticket Approved",
+      "message": "Your work ticket \"Implement user authentication module\" has been approved by the manager.",
+      "is_read": false,
+      "priority": "medium",
+      "created_at": "2025-10-04T12:19:53.857Z"
+    }
+  },
+  {
+    "id": "notification-002",
+    "data": {
+      "id": "notification-002",
+      "user_id": "employee-demo-001",
+      "type": "goal_reminder",
+      "title": "Goal Deadline Approaching",
+      "message": "Your monthly hours target goal is due in 5 days. Current progress: 75%",
+      "is_read": false,
+      "priority": "high",
+      "created_at": "2025-10-04T12:19:53.857Z"
+    }
+  }
+]

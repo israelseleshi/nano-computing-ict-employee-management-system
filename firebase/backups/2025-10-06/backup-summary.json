@@ -1,0 +1,23 @@
+{
+  "timestamp": "2025-10-06T11:25:51.953Z",
+  "collections": {
+    "departments": 3,
+    "employeeLeaveBalances": 2,
+    "employeeProfiles": 2,
+    "employees": 2,
+    "goals": 2,
+    "leaveBalances": 2,
+    "leaveRequests": 3,
+    "leaveSettings": 1,
+    "managerLeaveRequests": 5,
+    "notifications": 2,
+    "payrollEntries": 1,
+    "profileChangeLogs": 2,
+    "reports": 1,
+    "settings": 1,
+    "timeEntries": 1,
+    "users": 3,
+    "workTickets": 2
+  },
+  "totalDocuments": 35
+}

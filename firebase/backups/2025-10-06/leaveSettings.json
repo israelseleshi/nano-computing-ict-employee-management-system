@@ -1,0 +1,64 @@
+[
+  {
+    "id": "leave-policy-2024",
+    "data": {
+      "id": "leave-policy-2024",
+      "year": 2024,
+      "policies": {
+        "vacation": {
+          "annualAllowance": 22,
+          "maxCarryOver": 5,
+          "maxConsecutiveDays": 15,
+          "advanceNoticeRequired": 14,
+          "blackoutPeriods": [
+            "2024-12-20/2024-12-31",
+            "2024-07-01/2024-07-15"
+          ]
+        },
+        "sick": {
+          "annualAllowance": 10,
+          "maxCarryOver": 0,
+          "maxConsecutiveDays": 30,
+          "advanceNoticeRequired": 0,
+          "medicalCertificateRequired": 3
+        },
+        "personal": {
+          "annualAllowance": 5,
+          "maxCarryOver": 0,
+          "maxConsecutiveDays": 3,
+          "advanceNoticeRequired": 7
+        },
+        "emergency": {
+          "annualAllowance": 3,
+          "maxCarryOver": 0,
+          "maxConsecutiveDays": 5,
+          "advanceNoticeRequired": 0
+        }
+      },
+      "approvalWorkflow": {
+        "autoApprovalLimit": 0,
+        "requireManagerApproval": true,
+        "requireHRApproval": false,
+        "escalationDays": 3
+      },
+      "notifications": {
+        "employeeOnSubmission": true,
+        "managerOnSubmission": true,
+        "employeeOnDecision": true,
+        "reminderDays": [
+          1,
+          3,
+          7
+        ]
+      },
+      "createdAt": {
+        "_seconds": 1759649708,
+        "_nanoseconds": 397000000
+      },
+      "updatedAt": {
+        "_seconds": 1759649708,
+        "_nanoseconds": 397000000
+      }
+    }
+  }
+]

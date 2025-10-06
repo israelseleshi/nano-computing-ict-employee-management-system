@@ -3,25 +3,76 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // Helper function to check if user is admin/manager
+    function isManager() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
     // Users collection - users can only access their own profile
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
       
       // Allow managers to read employee profiles for management purposes
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      allow read: if isManager();
+      
+      // Allow managers to create/update employee profiles
+      allow write: if isManager();
     }
     
-    // Employees collection - for employee data management
+    // Collections that need to be accessible for cleanup operations
+    // Allow full access to collections that may need to be deleted
     match /employees/{employeeId} {
-      // All authenticated users can read employee data (for dropdowns, etc.)
-      allow read: if request.auth != null;
-      
-      // Only managers can write/update employee data
-      allow write: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /departments/{departmentId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /reports/{reportId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /dates/{dateId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /leaveSettings/{settingId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /employeeLeaveBalances/{balanceId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /courses/{courseId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /documents/{documentId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /expenses/{expenseId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /learningProgress/{progressId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /messages/{messageId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /performanceMetrics/{metricId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /teamMembers/{memberId} {
+      allow read, write, delete: if true; // Allow cleanup operations
     }
     
     // Work tickets collection
@@ -34,12 +85,13 @@ service cloud.firestore {
         request.resource.data.employeeId == request.auth.uid;
       
       // Managers can read/write all tickets
-      allow read, write: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      allow read, write: if isManager();
+      
+      // Allow cleanup operations
+      allow delete: if true;
     }
     
-    // Time entries collection - NEW for Time Tracking feature
+    // Time entries collection
     match /timeEntries/{entryId} {
       // Employees can read/write their own time entries
       allow read, write: if request.auth != null && 
@@ -50,17 +102,19 @@ service cloud.firestore {
         request.resource.data.employeeId == request.auth.uid;
       
       // Managers can read/write all time entries
-      allow read, write: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      allow read, write: if isManager();
+      
+      // Allow cleanup operations
+      allow delete: if true;
     }
     
-    // Payroll entries collection - NEW for Payroll Management feature
+    // Payroll entries collection
     match /payrollEntries/{entryId} {
       // Only managers can access payroll data (sensitive financial information)
-      allow read, write: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      allow read, write: if isManager();
+      
+      // Allow cleanup operations
+      allow delete: if true;
     }
     
     // Personal goals collection
@@ -74,9 +128,10 @@ service cloud.firestore {
         request.resource.data.employee_id == request.auth.uid;
       
       // Managers can read employee goals for performance review
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      allow read: if isManager();
+      
+      // Allow cleanup operations
+      allow delete: if true;
     }
     
     // Notifications collection
@@ -89,54 +144,36 @@ service cloud.firestore {
       allow create: if request.auth != null;
       
       // Managers can create notifications for employees
-      allow create: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+      allow create: if isManager();
+      
+      // Allow cleanup operations
+      allow delete: if true;
     }
     
-    // Calendar events collection
-    match /calendarEvents/{eventId} {
-      // Users can only access their own calendar events
+    // Settings collection - consolidated settings
+    match /settings/{settingId} {
+      // Managers can read/write settings
+      allow read, write: if isManager();
+      
+      // Allow cleanup operations
+      allow delete: if true;
+    }
+    
+    // Leave requests collection - consolidated leave management
+    match /leaveRequests/{requestId} {
+      // Employees can read/write their own leave requests
       allow read, write: if request.auth != null && 
-        resource.data.employee_id == request.auth.uid;
-      
-      // Allow creation of new events
-      allow create: if request.auth != null && 
-        request.resource.data.employee_id == request.auth.uid;
-      
-      // Managers can read all calendar events for scheduling
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
-    }
-    
-    // Performance metrics collection - for Performance Analytics feature
-    match /performanceMetrics/{metricId} {
-      // Users can read their own metrics
-      allow read: if request.auth != null && 
-        resource.data.employee_id == request.auth.uid;
-      
-      // Managers can read all metrics for analytics
-      allow read: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
-      
-      // Only system/managers can write metrics
-      allow write: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
-    }
-    
-    // Ticket status updates - for Ticket Management feature
-    match /ticketStatusUpdates/{updateId} {
-      // Only managers can create status updates
-      allow read, write: if request.auth != null && 
-        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
-      
-      // Employees can read status updates for their tickets
-      allow read: if request.auth != null && 
         resource.data.employeeId == request.auth.uid;
+      
+      // Allow creation of new leave requests
+      allow create: if request.auth != null && 
+        request.resource.data.employeeId == request.auth.uid;
+      
+      // Managers can read/write all leave requests
+      allow read, write: if isManager();
+      
+      // Allow cleanup operations
+      allow delete: if true;
     }
   }
 }

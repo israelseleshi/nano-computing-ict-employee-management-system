@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ticket-001",
+    "data": {
+      "id": "ticket-001",
+      "employee_id": "employee-demo-001",
+      "manager_id": "manager-demo-001",
+      "work_date": "2024-01-15",
+      "start_time": "09:00",
+      "end_time": "17:00",
+      "task_description": "Implement user authentication module for the employee management system",
+      "status": "approved",
+      "created_at": "2025-10-04T12:19:53.857Z",
+      "updated_at": "2025-10-04T12:19:53.857Z"
+    }
+  },
+  {
+    "id": "ticket-002",
+    "data": {
+      "id": "ticket-002",
+      "employee_id": "employee-demo-002",
+      "manager_id": "manager-demo-001",
+      "work_date": "2024-01-15",
+      "start_time": "09:00",
+      "end_time": "16:00",
+      "task_description": "Design user interface mockups for dashboard components",
+      "status": "pending",
+      "created_at": "2025-10-04T12:19:53.857Z",
+      "updated_at": "2025-10-04T12:19:53.857Z"
+    }
+  }
+]

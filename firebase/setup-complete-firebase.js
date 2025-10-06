@@ -5,7 +5,6 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
 // Get current directory for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,16 +12,22 @@ const __dirname = dirname(__filename);
 // Initialize Firebase Admin SDK
 const serviceAccount = JSON.parse(fs.readFileSync('./firebase/firebase-service-account-key.json', 'utf8'));
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  projectId: 'nanocomputingict-867d1'
-});
+// Firebase configuration from environment variables
+import dotenv from 'dotenv';
+dotenv.config();
 
-const db = admin.firestore();
+const firebaseConfig = {
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VITE_FIREBASE_APP_ID,
+  measurementId: process.env.VITE_FIREBASE_MEASUREMENT_ID
+};
 
-// Complete sample data for all collections
-const completeData = {
-  // Existing collections
+// Sample data
+const sampleData = {
   employees: [
     {
       id: 'emp-001',

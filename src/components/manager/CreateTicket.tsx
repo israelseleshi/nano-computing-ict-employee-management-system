@@ -14,6 +14,9 @@ interface CreateTicketProps {
 }
 
 export default function CreateTicket({ employees, onCreateTicket }: CreateTicketProps) {
+  console.log('🎯 CreateTicket component received employees:', employees);
+  console.log('📊 Number of employees:', employees?.length || 0);
+  
   const [formData, setFormData] = useState({
     employeeId: '',
     date: '',

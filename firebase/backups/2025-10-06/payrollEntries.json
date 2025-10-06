@@ -1,0 +1,23 @@
+[
+  {
+    "id": "payroll-demo-1",
+    "data": {
+      "id": "payroll-demo-1",
+      "employeeId": "emp-1",
+      "employeeName": "John Doe",
+      "period": "2024-01",
+      "regularHours": 160,
+      "overtimeHours": 0,
+      "regularRate": 1500,
+      "overtimeRate": 2250,
+      "grossPay": 240000,
+      "deductions": {
+        "tax": 24000,
+        "pension": 16800,
+        "insurance": 7200
+      },
+      "netPay": 192000,
+      "status": "calculated"
+    }
+  }
+]

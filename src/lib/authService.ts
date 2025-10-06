@@ -1,6 +1,6 @@
 // Environment-aware authentication service
-import { mockAuth, mockDb, MockSession } from './mockAuth';
-import { enhancedAuth } from './firebaseAdapter';
+import { mockAuth, mockDb, MockSession } from '@lib/mockAuth';
+import { enhancedAuth } from '@lib/firebaseAdapter';
 
 // Check if Firebase should be used
 const useFirebase = import.meta.env.VITE_USE_FIREBASE === 'true';

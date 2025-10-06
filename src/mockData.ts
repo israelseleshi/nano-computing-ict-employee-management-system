@@ -1,4 +1,4 @@
-import { Employee, WorkTicket } from './types';
+import { Employee, WorkTicket } from '@types';
 
 export const mockEmployees: Employee[] = [
   {

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "log-001",
+    "data": {
+      "id": "log-001",
+      "employeeId": "emp-001",
+      "changedBy": "emp-001",
+      "changeType": "profile_update",
+      "field": "skills",
+      "oldValue": [
+        "JavaScript",
+        "React",
+        "Node.js"
+      ],
+      "newValue": [
+        "JavaScript",
+        "React",
+        "Node.js",
+        "TypeScript",
+        "Python"
+      ],
+      "reason": "Added new skills acquired through training",
+      "timestamp": {
+        "_seconds": 1759603511,
+        "_nanoseconds": 791000000
+      }
+    }
+  },
+  {
+    "id": "log-002",
+    "data": {
+      "id": "log-002",
+      "employeeId": "emp-002",
+      "changedBy": "emp-002",
+      "changeType": "emergency_contact_update",
+      "field": "emergencyContact.phone",
+      "oldValue": "+251911234571",
+      "newValue": "+251911234570",
+      "reason": "Updated emergency contact phone number",
+      "timestamp": {
+        "_seconds": 1759603512,
+        "_nanoseconds": 863000000
+      }
+    }
+  }
+]

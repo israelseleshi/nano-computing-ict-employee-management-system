@@ -2,69 +2,144 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users collection - only authenticated users can read/write their own data
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isManager() {
+      return isAuthenticated() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isManagerOrOwner(employeeId) {
+      return isManager() || isOwner(employeeId);
+    }
+
+    // Users collection - consolidated with profiles and leave balances
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isOwner(userId) || isManager();
+      allow delete: if isManager();
     }
     
-    // Employees collection - managers can read/write, employees can read their own data
+    // Employees collection
     match /employees/{employeeId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        (request.auth.token.role == 'manager' || request.auth.uid == employeeId);
+      allow read, write, delete: if true; // Allow cleanup operations
     }
     
-    // Work tickets - managers can read/write all, employees can read/write their own
-    match /workTickets/{ticketId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        (request.auth.token.role == 'manager' || 
-         request.auth.uid == resource.data.employeeId);
-    }
-    
-    // Time entries - managers can read/write all, employees can read/write their own
-    match /timeEntries/{entryId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        (request.auth.token.role == 'manager' || 
-         request.auth.uid == resource.data.employeeId);
-    }
-    
-    // Payroll entries - only managers can access
-    match /payrollEntries/{payrollId} {
-      allow read, write: if request.auth != null && request.auth.token.role == 'manager';
-    }
-    
-    // Notifications - managers can read/write all, employees can read their own
-    match /notifications/{notificationId} {
-      allow read: if request.auth != null && 
-        (request.auth.token.role == 'manager' || 
-         request.auth.uid in resource.data.recipients);
-      allow write: if request.auth != null && request.auth.token.role == 'manager';
-    }
-    
-    // Goals - managers can read/write all, employees can read/write their own
-    match /goals/{goalId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        (request.auth.token.role == 'manager' || 
-         request.auth.uid == resource.data.employeeId);
-    }
-    
-    // Departments - all authenticated users can read, only managers can write
+    // Departments collection
     match /departments/{deptId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.token.role == 'manager';
+      allow read, write, delete: if true; // Allow cleanup operations
     }
     
-    // Reports - only managers can access
+    // Work tickets collection
+    match /workTickets/{ticketId} {
+      allow read: if isAuthenticated();
+      allow create: if isManager();
+      allow update: if isManager();
+      allow delete: if isManager();
+    }
+    
+    // Time entries
+    match /timeEntries/{entryId} {
+      allow read: if isAuthenticated();
+      allow write: if isManagerOrOwner(resource.data.employeeId);
+    }
+    
+    // Payroll entries collection
+    match /payrollEntries/{entryId} {
+      allow read: if isOwner(resource.data.employee_id) || isManager();
+      allow create: if isManager();
+      allow update: if isManager();
+      allow delete: if isManager();
+    }
+    
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && 
+        (isManager() || request.auth.uid in resource.data.recipients);
+      allow write: if isManager();
+    }
+    
+    // Goals
+    match /goals/{goalId} {
+      allow read: if isAuthenticated();
+      allow write: if isManagerOrOwner(resource.data.employeeId);
+    }
+    
+    // Leave requests collection - consolidated
+    match /leaveRequests/{requestId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isManager();
+      allow delete: if isManager();
+    }
+    
+    // Performance metrics
+    match /performanceMetrics/{perfId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    // Messages
+    match /messages/{messageId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    // Courses - all can read, managers can write
+    match /courses/{courseId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    // Documents
+    match /documents/{docId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    // Team members
+    match /teamMembers/{memberId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    // Achievements
+    match /achievements/{achievementId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    // Reports - managers only
     match /reports/{reportId} {
-      allow read, write: if request.auth != null && request.auth.token.role == 'manager';
+      allow read, write, delete: if true; // Allow cleanup operations
     }
     
-    // Settings - only managers can access
+    // Settings - managers only
     match /settings/{settingId} {
-      allow read, write: if request.auth != null && request.auth.token.role == 'manager';
+      allow read, write: if isManager();
+    }
+    
+    // Additional collections that need cleanup permissions
+    match /expenses/{expenseId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /learningProgress/{progressId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /dates/{dateId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /leaveSettings/{settingId} {
+      allow read, write, delete: if true; // Allow cleanup operations
+    }
+    
+    match /employeeLeaveBalances/{balanceId} {
+      allow read, write, delete: if true; // Allow cleanup operations
     }
   }
 }

@@ -1,286 +1,352 @@
 import { useState, useEffect } from 'react';
-import { MockSession, Profile, WorkTicketDB, mockDb } from './lib/mockAuth';
-import { authService } from './lib/authService';
-import { Employee, WorkTicket, ViewType, LeaveRequest } from './lib/types';
-import Login from './components/auth/Login';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { auth } from '@lib/firebase/config';
+import { firebaseService } from '@services/firebase/consolidated.service';
+import { Employee, WorkTicket, ViewType, LeaveRequest } from '@types';
+import Login from '@features/auth/Login/Login';
 // Premium 4-Tab Layout Components
-import OverviewTab from './components/manager/OverviewTab';
-import OperationsTab from './components/manager/OperationsTab';
-import HRFinanceTab from './components/manager/HRFinanceTab';
-import IntelligenceTab from './components/manager/IntelligenceTab';
-import Sidebar from './components/common/Sidebar';
-import Header from './components/common/Header';
-import EmployeeLayout from './components/employee/EmployeeLayout';
+import OverviewTab from '@features/dashboard/manager/Overview/OverviewTab';
+import OperationsTab from '@features/dashboard/manager/Operations/OperationsTab';
+import HRFinanceTab from '@features/dashboard/manager/HRFinance/HRFinanceTab';
+import IntelligenceTab from '@features/dashboard/manager/Intelligence/IntelligenceTab';
+import Sidebar from '@components/common/Sidebar/Sidebar';
+import Header from '@components/common/Header/Header';
+import EmployeeLayout from '@features/dashboard/employee/Dashboard/EmployeeLayout';
 
-// Mock data
-const mockEmployees: Employee[] = [
-  {
-    id: 'emp-1',
-    name: 'John Doe',
-    email: 'john@nanocomputing.com',
-    department: 'Development',
-    position: 'Senior Developer',
-    hourlyRate: 1500
-  }
-];
-
-const mockTickets: WorkTicket[] = [
-  {
-    id: 'ticket-1',
-    employeeId: 'emp-1',
-    employeeName: 'John Doe',
-    date: '2024-01-15',
-    startTime: '09:00',
-    endTime: '17:00',
-    description: 'Working on authentication module',
-    status: 'pending'
-  }
-];
-
-// Mock leave requests data
-const mockLeaveRequests: LeaveRequest[] = [
-  {
-    id: 'leave-001',
-    employeeId: 'emp-1',
-    employeeName: 'John Doe',
-    employeeDepartment: 'Development',
-    type: 'vacation',
-    startDate: '2024-02-15',
-    endDate: '2024-02-20',
-    days: 6,
-    reason: 'Family vacation to Bahir Dar',
-    status: 'pending',
-    submittedAt: '2024-01-20T10:00:00Z'
-  },
-  {
-    id: 'leave-002',
-    employeeId: 'emp-1',
-    employeeName: 'John Doe',
-    employeeDepartment: 'Development',
-    type: 'sick',
-    startDate: '2024-01-10',
-    endDate: '2024-01-12',
-    days: 3,
-    reason: 'Flu symptoms and recovery',
-    status: 'approved',
-    managerComment: 'Get well soon. Take care of your health.',
-    submittedAt: '2024-01-09T08:00:00Z',
-    approvedAt: '2024-01-09T09:15:00Z'
-  }
-];
-
-function App() {
-  const [session, setSession] = useState<MockSession | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<ViewType>('overview');
-  const [employees, setEmployees] = useState<Employee[]>(mockEmployees);
-  const [tickets, setTickets] = useState<WorkTicket[]>(mockTickets);
-  const [dbTickets, setDbTickets] = useState<WorkTicketDB[]>([]);
-  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>(mockLeaveRequests);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [tickets, setTickets] = useState<WorkTicket[]>([]);
+  const [dbTickets, setDbTickets] = useState<any[]>([]);
+  const [leaveRequests, setLeaveRequests] = useState<LeaveRequest[]>([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    authService.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) {
-        fetchProfile(session.user.id);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setLoading(true);
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        try {
+          await fetchProfile(firebaseUser.uid);
+        } catch (error) {
+          console.error('Error loading user data:', error);
+        } finally {
+          setLoading(false);
+        }
       } else {
-        setLoading(false);
-      }
-    });
-
-    const {
-      data: { subscription },
-    } = authService.onAuthStateChange((session) => {
-      setSession(session);
-      if (session) {
-        fetchProfile(session.user.id);
-      } else {
+        setUser(null);
         setProfile(null);
         setLoading(false);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => unsubscribe();
   }, []);
 
+  // Separate useEffect to fetch data after profile is loaded
   useEffect(() => {
     if (profile) {
-      fetchTickets();
+      console.log('📋 Profile loaded, fetching additional data...');
+      Promise.all([
+        fetchLeaveRequests(),
+        fetchEmployees(),
+        fetchTickets()
+      ]).then(() => {
+        console.log('✅ All additional data loaded');
+      }).catch(error => {
+        console.error('❌ Error loading additional data:', error);
+      });
     }
   }, [profile]);
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await authService.getProfile(userId);
-
-      if (error) {
-        console.warn('Profile not found, user may need to complete setup:', error);
-        // Don't throw error, just set profile to null and continue
+      const userDoc = await firebaseService.getUser(userId);
+      if (userDoc) {
+        setProfile({
+          id: userDoc.id,
+          full_name: userDoc.profile.fullName,
+          email: userDoc.email,
+          role: userDoc.role,
+          department: userDoc.profile.department,
+          hourly_rate: userDoc.profile.hourlyRate,
+          created_at: userDoc.createdAt
+        });
+      } else {
+        console.error('User profile not found in database');
+        setError('Account not found. Please contact administrator.');
+        // Force logout if user doesn't exist in our database
+        await auth.signOut();
+        setUser(null);
         setProfile(null);
-        return;
       }
-      setProfile(data);
     } catch (err: any) {
       console.error('Error fetching profile:', err);
-      // Don't set error state for missing profiles in demo mode
-      setProfile(null);
-    } finally {
-      setLoading(false);
+      setError('Failed to load user profile. Please try again.');
+    }
+  };
+
+  const fetchLeaveRequests = async () => {
+    try {
+      const requests = await firebaseService.getLeaveRequests();
+      const convertedRequests: LeaveRequest[] = requests.map((req: any) => ({
+        id: req.id,
+        employeeId: req.employeeId,
+        employeeName: req.employeeName || 'Unknown Employee',
+        employeeDepartment: req.employeeDepartment || 'Unknown Department',
+        type: req.type,
+        startDate: req.startDate,
+        endDate: req.endDate,
+        days: req.days,
+        reason: req.reason || '',
+        status: req.status === 'cancelled' ? 'rejected' : req.status,
+        submittedAt: req.submittedAt,
+        reviewedAt: req.reviewedAt,
+        reviewedBy: req.reviewedBy,
+        managerComment: req.managerComment || ''
+      }));
+      setLeaveRequests(convertedRequests);
+    } catch (err) {
+      console.error('Error fetching leave requests:', err);
+    }
+  };
+
+  const fetchEmployees = async () => {
+    try {
+      console.log('🔍 Fetching employees...');
+      console.log('Current profile:', profile);
+      
+      // Only managers can fetch all users
+      if (profile?.role === 'manager' || profile?.role === 'admin') {
+        console.log('✅ Manager role confirmed, fetching users...');
+        const users = await firebaseService.getAllUsers();
+        console.log('📊 Raw users from Firebase:', users);
+        
+        const convertedEmployees: Employee[] = users
+          .filter(u => u.role === 'employee') // Only get employees, not managers
+          .map(u => ({
+            id: u.id,
+            name: u.profile?.fullName || u.email?.split('@')[0] || 'Unknown User',
+            email: u.email || '',
+            department: u.profile?.department || 'General',
+            position: u.profile?.position || 'Employee',
+            hourlyRate: u.profile?.hourlyRate || 1500
+          }));
+        
+        console.log('👥 Converted employees:', convertedEmployees);
+        setEmployees(convertedEmployees);
+      } else {
+        console.log('⚠️ Not a manager, cannot fetch employees. Role:', profile?.role);
+      }
+    } catch (err) {
+      console.error('❌ Error fetching employees:', err);
     }
   };
 
   const fetchTickets = async () => {
     try {
-      const { data, error } = await mockDb.getWorkTickets();
-
-      if (error) throw error;
-      setDbTickets(data || []);
+      const workTickets = await firebaseService.getWorkTickets();
+      const convertedTickets: WorkTicket[] = workTickets.map(t => ({
+        id: t.id,
+        employeeId: t.employee_id,
+        employeeName: employees.find(e => e.id === t.employee_id)?.name || 'Unknown',
+        date: t.work_date,
+        startTime: t.start_time,
+        endTime: t.end_time,
+        description: t.task_description
+      }));
+      setTickets(convertedTickets);
+      setDbTickets(workTickets);
     } catch (err: any) {
       console.error('Error fetching tickets:', err);
     }
   };
 
-  const handleLogin = async (email: string, password: string) => {
-    setError(null);
-    try {
-      const result = await authService.signIn(email, password);
-
-      if ('error' in result && result.error) {
-        throw new Error(typeof result.error === 'string' ? result.error : 'Login failed');
-      }
-      if (!result.data.session) {
-        throw new Error('Login failed');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Invalid login credentials');
-      throw err;
-    }
+  // Authentication handlers
+  const handleLogin = async (_email: string, _password: string): Promise<void> => {
+    // This is handled by Firebase Auth now
   };
 
   const handleLogout = async () => {
-    await authService.signOut();
+    await auth.signOut();
     setProfile(null);
     setDbTickets([]);
+    setEmployees([]);
+    setTickets([]);
+    setLeaveRequests([]);
   };
 
-  const handleAddEmployee = (employee: Omit<Employee, 'id'>) => {
-    const newEmployee: Employee = {
-      ...employee,
-      id: `emp-${Date.now()}`
-    };
-    setEmployees([...employees, newEmployee]);
-  };
+  // CRUD handlers
 
-  const handleCreateTicket = (ticketData: {
+  const handleCreateTicket = async (ticketData: {
     employeeId: string;
     date: string;
     startTime: string;
     endTime: string;
     taskDescription: string;
   }) => {
-    const employee = employees.find(e => e.id === ticketData.employeeId);
-    const newTicket: WorkTicket = {
-      id: `ticket-${Date.now()}`,
-      employeeId: ticketData.employeeId,
-      employeeName: employee?.name || 'Unknown',
-      date: ticketData.date,
-      startTime: ticketData.startTime,
-      endTime: ticketData.endTime,
-      description: ticketData.taskDescription,
-      status: 'pending'
-    };
-    setTickets([...tickets, newTicket]);
+    try {
+      console.log('🎫 Creating ticket for employee ID:', ticketData.employeeId);
+      const ticketToCreate = {
+        employee_id: ticketData.employeeId,
+        manager_id: user?.uid || null,
+        work_date: ticketData.date,
+        start_time: ticketData.startTime,
+        end_time: ticketData.endTime,
+        task_description: ticketData.taskDescription
+      };
+      
+      console.log('📝 Ticket to create:', ticketToCreate);
+      await firebaseService.createWorkTicket(ticketToCreate);
+      console.log('✅ Ticket created, refreshing tickets...');
+      await fetchTickets();
+      console.log('🔄 Tickets refreshed');
+      
+      // Show success message
+      const employeeName = employees.find(e => e.id === ticketData.employeeId)?.name || 'Employee';
+      setSuccessMessage(`Work ticket created successfully for ${employeeName}!`);
+      
+      // Auto-hide success message after 4 seconds
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 4000);
+      
+    } catch (err) {
+      console.error('❌ Error creating ticket:', err);
+      setError('Failed to create work ticket. Please try again.');
+    }
   };
 
-  const handleUpdateTicketStatus = (ticketId: string, status: 'pending' | 'approved' | 'rejected', comment?: string) => {
-    setTickets(tickets.map(ticket => 
-      ticket.id === ticketId 
-        ? { ...ticket, status, comment }
-        : ticket
-    ));
-  };
 
   // Time tracking handlers
-  const handleCreateTimeEntry = (entry: any) => {
-    console.log('Time entry created:', entry);
-    // In a real app, this would save to database
+  const handleCreateTimeEntry = async (entry: any) => {
+    try {
+      await firebaseService.createTimeEntry({
+        employee_id: entry.employeeId || user?.uid || '',
+        date: entry.date,
+        clock_in: entry.clockIn,
+        clock_out: entry.clockOut,
+        break_duration: entry.breakDuration || 0,
+        total_hours: entry.totalHours,
+        status: 'completed'
+      });
+    } catch (err) {
+      console.error('Error creating time entry:', err);
+    }
   };
 
-  const handleUpdateTimeEntry = (entryId: string, updates: any) => {
-    console.log('Time entry updated:', entryId, updates);
-    // In a real app, this would update in database
+  const handleUpdateTimeEntry = async (entryId: string, updates: any) => {
+    try {
+      console.log('Updating time entry:', entryId, updates);
+    } catch (err) {
+      console.error('Error updating time entry:', err);
+    }
   };
 
-  // Payroll handlers
-  const handleGeneratePayroll = (entries: any[]) => {
-    console.log('Payroll generated:', entries);
-    // In a real app, this would save to database
+  const handleGeneratePayroll = async (entries: any[]) => {
+    try {
+      for (const entry of entries) {
+        await firebaseService.createPayrollEntry(entry);
+      }
+    } catch (err) {
+      console.error('Error generating payroll:', err);
+    }
   };
 
-  const handleUpdatePayrollStatus = (entryId: string, status: string) => {
-    console.log('Payroll status updated:', entryId, status);
-    // In a real app, this would update in database
+  const handleUpdatePayrollStatus = async (entryId: string, status: string) => {
+    try {
+      console.log('Updating payroll status:', entryId, status);
+    } catch (err) {
+      console.error('Error updating payroll status:', err);
+    }
   };
 
   // Notification handlers
-  const handleSendNotification = (notification: any) => {
-    console.log('Notification sent:', notification);
-    // In a real app, this would save to database and send real-time notifications
+  const handleSendNotification = async (notification: any) => {
+    try {
+      await firebaseService.createNotification({
+        user_id: notification.userId,
+        type: notification.type,
+        title: notification.title,
+        message: notification.message,
+        priority: notification.priority || 'medium',
+        is_read: false
+      });
+    } catch (err) {
+      console.error('Error sending notification:', err);
+    }
   };
 
-  const handleMarkAsRead = (notificationId: string) => {
-    console.log('Notification marked as read:', notificationId);
-    // In a real app, this would update in database
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      await firebaseService.markNotificationAsRead(notificationId);
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+    }
   };
 
   // Leave management handlers
-  const handleUpdateLeaveStatus = (requestId: string, status: 'approved' | 'rejected', comment?: string) => {
-    setLeaveRequests(prevRequests => 
-      prevRequests.map(request => 
-        request.id === requestId 
-          ? { 
-              ...request, 
-              status, 
-              managerComment: comment,
-              approvedAt: status === 'approved' ? new Date().toISOString() : request.approvedAt,
-              rejectedAt: status === 'rejected' ? new Date().toISOString() : request.rejectedAt
-            }
-          : request
-      )
-    );
+  const handleUpdateLeaveStatus = async (requestId: string, status: 'approved' | 'rejected', comment?: string) => {
+    try {
+      await firebaseService.updateLeaveRequestStatus(
+        requestId,
+        status,
+        user?.uid || '',
+        comment
+      );
+      await fetchLeaveRequests();
+    } catch (err) {
+      console.error('Error updating leave request status:', err);
+    }
   };
 
+  // Show loading screen
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
     );
   }
 
-  if (!session) {
+  // Show login if not authenticated
+  if (!user) {
     return <Login onLogin={handleLogin} error={error} />;
   }
 
-  // If logged in but no profile, show a basic dashboard
-  if (!profile) {
+  // Show error if profile couldn't be loaded
+  if (!profile && user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Setting up your profile...</p>
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-100 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-lg shadow-lg">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Account Error</h2>
+          <p className="text-gray-600 mb-4">{error || 'Unable to load your profile. Please contact administrator.'}</p>
+          <button 
+            onClick={handleLogout}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Back to Login
+          </button>
         </div>
       </div>
     );
   }
 
+  // Employee Layout
   if (profile.role === 'employee') {
+    console.log('🔍 Employee Dashboard Debug:');
+    console.log('Profile ID:', profile.id);
+    console.log('All dbTickets:', dbTickets);
+    console.log('Filtered tickets:', dbTickets.filter(t => t.employee_id === profile.id));
+    
     return (
       <EmployeeLayout
         profile={profile}
@@ -308,7 +374,6 @@ function App() {
             tickets={tickets}
             leaveRequests={leaveRequests}
             onCreateTicket={handleCreateTicket}
-            onUpdateTicketStatus={handleUpdateTicketStatus}
             onCreateTimeEntry={handleCreateTimeEntry}
             onUpdateTimeEntry={handleUpdateTimeEntry}
             onUpdateLeaveStatus={handleUpdateLeaveStatus}
@@ -319,7 +384,7 @@ function App() {
           <HRFinanceTab
             employees={employees}
             tickets={tickets}
-            onAddEmployee={handleAddEmployee}
+            onAddEmployee={(employee) => console.log('Add employee:', employee)}
             onGeneratePayroll={handleGeneratePayroll}
             onUpdatePayrollStatus={handleUpdatePayrollStatus}
           />
@@ -332,36 +397,56 @@ function App() {
           />
         );
       default:
-        return (
-          <OverviewTab
-            employees={employees}
-            tickets={tickets}
-            onSendNotification={handleSendNotification}
-            onMarkAsRead={handleMarkAsRead}
-          />
-        );
+        return null;
     }
   };
 
+  // Manager Layout
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar 
         activeView={activeView} 
         onViewChange={setActiveView}
-        onLogout={handleLogout}
         isCollapsed={sidebarCollapsed}
-        onToggleCollapse={setSidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        onLogout={handleLogout}
       />
+      
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header profile={profile} />
-        <main className="flex-1 overflow-y-auto p-6 lg:p-8 flex justify-center">
-          <div className="w-full max-w-7xl">
+        <Header 
+          profile={profile}
+        />
+        
+        <main className="flex-1 overflow-y-auto p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
             {renderView()}
           </div>
         </main>
       </div>
+
+      {/* Success Popup */}
+      {successMessage && (
+        <div className="fixed top-4 right-4 z-50 animate-fade-in">
+          <div className="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3">
+            <div className="flex-shrink-0">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <p className="font-medium">{successMessage}</p>
+            </div>
+            <button 
+              onClick={() => setSuccessMessage(null)}
+              className="flex-shrink-0 ml-4 text-green-200 hover:text-white"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-export default App;

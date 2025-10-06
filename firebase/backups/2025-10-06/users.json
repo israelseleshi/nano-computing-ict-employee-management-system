@@ -1,0 +1,41 @@
+[
+  {
+    "id": "employee-demo-001",
+    "data": {
+      "id": "employee-demo-001",
+      "email": "john@nanocomputing.com",
+      "full_name": "John Doe",
+      "role": "employee",
+      "hourly_rate": 1500,
+      "department": "Development",
+      "created_at": "2025-10-04T12:19:53.857Z",
+      "updated_at": "2025-10-04T12:19:53.857Z"
+    }
+  },
+  {
+    "id": "employee-demo-002",
+    "data": {
+      "id": "employee-demo-002",
+      "email": "sarah@nanocomputing.com",
+      "full_name": "Sarah Johnson",
+      "role": "employee",
+      "hourly_rate": 1600,
+      "department": "Design",
+      "created_at": "2025-10-04T12:19:53.857Z",
+      "updated_at": "2025-10-04T12:19:53.857Z"
+    }
+  },
+  {
+    "id": "manager-demo-001",
+    "data": {
+      "id": "manager-demo-001",
+      "email": "manager@nanocomputing.com",
+      "full_name": "Manager Admin",
+      "role": "manager",
+      "hourly_rate": null,
+      "department": "Management",
+      "created_at": "2025-10-04T12:19:53.857Z",
+      "updated_at": "2025-10-04T12:19:53.857Z"
+    }
+  }
+]

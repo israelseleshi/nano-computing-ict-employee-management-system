@@ -1,7 +1,7 @@
 // Firebase Adapter - Bridges Firebase services with existing app interfaces
-import { firebaseAuth, FirebaseProfile, FirebaseSession } from './firebaseAuth';
-import { firebaseData, FirebaseWorkTicket, FirebaseGoal, FirebaseNotification } from './firebaseData';
-import { Profile, WorkTicketDB, MockSession } from './mockAuth';
+import { firebaseAuth, FirebaseProfile, FirebaseSession } from '@lib/firebaseAuth';
+import { firebaseData, FirebaseWorkTicket, FirebaseGoal, FirebaseNotification } from '@lib/firebaseData';
+import { Profile, WorkTicketDB, MockSession } from '@lib/mockAuth';
 
 // Convert Firebase types to app types
 export class FirebaseAdapter {

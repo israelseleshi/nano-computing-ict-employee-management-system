@@ -1,0 +1,92 @@
+[
+  {
+    "id": "balance-001",
+    "data": {
+      "id": "balance-001",
+      "employeeId": "emp-001",
+      "employeeName": "John Doe",
+      "year": 2024,
+      "vacation": {
+        "total": 22,
+        "used": 0,
+        "pending": 6,
+        "available": 16,
+        "carryOver": 2
+      },
+      "sick": {
+        "total": 10,
+        "used": 0,
+        "pending": 0,
+        "available": 10,
+        "carryOver": 0
+      },
+      "personal": {
+        "total": 5,
+        "used": 0,
+        "pending": 0,
+        "available": 5,
+        "carryOver": 0
+      },
+      "emergency": {
+        "total": 3,
+        "used": 0,
+        "pending": 0,
+        "available": 3,
+        "carryOver": 0
+      },
+      "lastUpdated": {
+        "_seconds": 1759649706,
+        "_nanoseconds": 988000000
+      },
+      "createdAt": {
+        "_seconds": 1759649706,
+        "_nanoseconds": 988000000
+      }
+    }
+  },
+  {
+    "id": "balance-002",
+    "data": {
+      "id": "balance-002",
+      "employeeId": "emp-002",
+      "employeeName": "Sarah Wilson",
+      "year": 2024,
+      "vacation": {
+        "total": 22,
+        "used": 0,
+        "pending": 0,
+        "available": 22,
+        "carryOver": 0
+      },
+      "sick": {
+        "total": 10,
+        "used": 3,
+        "pending": 0,
+        "available": 7,
+        "carryOver": 0
+      },
+      "personal": {
+        "total": 5,
+        "used": 0,
+        "pending": 0,
+        "available": 5,
+        "carryOver": 0
+      },
+      "emergency": {
+        "total": 3,
+        "used": 0,
+        "pending": 0,
+        "available": 3,
+        "carryOver": 0
+      },
+      "lastUpdated": {
+        "_seconds": 1759649707,
+        "_nanoseconds": 682000000
+      },
+      "createdAt": {
+        "_seconds": 1759649707,
+        "_nanoseconds": 682000000
+      }
+    }
+  }
+]

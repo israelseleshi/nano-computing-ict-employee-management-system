@@ -1,0 +1,155 @@
+[
+  {
+    "id": "leave-mgr-001",
+    "data": {
+      "id": "leave-mgr-001",
+      "employeeId": "emp-001",
+      "employeeName": "John Doe",
+      "employeeDepartment": "Development",
+      "employeePosition": "Senior Developer",
+      "employeeEmail": "john.doe@nanocomputing.com",
+      "type": "vacation",
+      "startDate": "2024-02-15",
+      "endDate": "2024-02-20",
+      "days": 6,
+      "reason": "Family vacation to Bahir Dar with extended family. Planning to visit historical sites and spend quality time together.",
+      "status": "pending",
+      "priority": "normal",
+      "submittedAt": "2024-01-20T10:00:00Z",
+      "managerId": "manager-001",
+      "attachments": [],
+      "createdAt": {
+        "_seconds": 1759649703,
+        "_nanoseconds": 377000000
+      },
+      "updatedAt": {
+        "_seconds": 1759649703,
+        "_nanoseconds": 377000000
+      }
+    }
+  },
+  {
+    "id": "leave-mgr-002",
+    "data": {
+      "id": "leave-mgr-002",
+      "employeeId": "emp-002",
+      "employeeName": "Sarah Wilson",
+      "employeeDepartment": "Design",
+      "employeePosition": "UI/UX Designer",
+      "employeeEmail": "sarah.wilson@nanocomputing.com",
+      "type": "sick",
+      "startDate": "2024-01-10",
+      "endDate": "2024-01-12",
+      "days": 3,
+      "reason": "Flu symptoms and recovery. Doctor recommended rest for full recovery.",
+      "status": "approved",
+      "priority": "high",
+      "managerComment": "Get well soon. Take care of your health. Approved for full recovery.",
+      "submittedAt": "2024-01-09T08:00:00Z",
+      "approvedAt": "2024-01-09T09:15:00Z",
+      "managerId": "manager-001",
+      "attachments": [
+        "medical-certificate-001.pdf"
+      ],
+      "createdAt": {
+        "_seconds": 1759649704,
+        "_nanoseconds": 129000000
+      },
+      "updatedAt": {
+        "_seconds": 1759649704,
+        "_nanoseconds": 129000000
+      }
+    }
+  },
+  {
+    "id": "leave-mgr-003",
+    "data": {
+      "id": "leave-mgr-003",
+      "employeeId": "emp-003",
+      "employeeName": "Michael Chen",
+      "employeeDepartment": "Development",
+      "employeePosition": "Full Stack Developer",
+      "employeeEmail": "michael.chen@nanocomputing.com",
+      "type": "personal",
+      "startDate": "2024-03-01",
+      "endDate": "2024-03-01",
+      "days": 1,
+      "reason": "Personal appointment - visa application at embassy",
+      "status": "pending",
+      "priority": "normal",
+      "submittedAt": "2024-02-25T16:00:00Z",
+      "managerId": "manager-001",
+      "attachments": [],
+      "createdAt": {
+        "_seconds": 1759649704,
+        "_nanoseconds": 833000000
+      },
+      "updatedAt": {
+        "_seconds": 1759649704,
+        "_nanoseconds": 833000000
+      }
+    }
+  },
+  {
+    "id": "leave-mgr-004",
+    "data": {
+      "id": "leave-mgr-004",
+      "employeeId": "emp-004",
+      "employeeName": "Almaz Tadesse",
+      "employeeDepartment": "Marketing",
+      "employeePosition": "Digital Marketing Specialist",
+      "employeeEmail": "almaz.tadesse@nanocomputing.com",
+      "type": "emergency",
+      "startDate": "2024-01-25",
+      "endDate": "2024-01-26",
+      "days": 2,
+      "reason": "Family emergency - urgent medical situation requiring immediate attention",
+      "status": "approved",
+      "priority": "urgent",
+      "managerComment": "Approved immediately. Take care of your family. Let us know if you need additional time.",
+      "submittedAt": "2024-01-25T07:30:00Z",
+      "approvedAt": "2024-01-25T07:45:00Z",
+      "managerId": "manager-001",
+      "attachments": [],
+      "createdAt": {
+        "_seconds": 1759649705,
+        "_nanoseconds": 565000000
+      },
+      "updatedAt": {
+        "_seconds": 1759649705,
+        "_nanoseconds": 565000000
+      }
+    }
+  },
+  {
+    "id": "leave-mgr-005",
+    "data": {
+      "id": "leave-mgr-005",
+      "employeeId": "emp-005",
+      "employeeName": "Daniel Bekele",
+      "employeeDepartment": "QA Testing",
+      "employeePosition": "Senior QA Engineer",
+      "employeeEmail": "daniel.bekele@nanocomputing.com",
+      "type": "vacation",
+      "startDate": "2024-04-10",
+      "endDate": "2024-04-15",
+      "days": 6,
+      "reason": "Annual vacation - visiting family in Gondar and exploring northern Ethiopia",
+      "status": "rejected",
+      "priority": "normal",
+      "managerComment": "Unfortunately, this conflicts with our major product release. Please consider rescheduling to late April or early May.",
+      "submittedAt": "2024-03-15T14:20:00Z",
+      "rejectedAt": "2024-03-16T10:30:00Z",
+      "managerId": "manager-001",
+      "attachments": [],
+      "createdAt": {
+        "_seconds": 1759649706,
+        "_nanoseconds": 293000000
+      },
+      "updatedAt": {
+        "_seconds": 1759649706,
+        "_nanoseconds": 293000000
+      }
+    }
+  }
+]

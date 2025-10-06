@@ -1,0 +1,19 @@
+[
+  {
+    "id": "report-001",
+    "data": {
+      "id": "report-001",
+      "type": "daily",
+      "date": "2024-01-04",
+      "generatedBy": "manager",
+      "totalEmployees": 2,
+      "totalHours": 16.5,
+      "totalAmount": 2400,
+      "status": "completed",
+      "createdAt": {
+        "_seconds": 1759600603,
+        "_nanoseconds": 938000000
+      }
+    }
+  }
+]

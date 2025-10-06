@@ -1,0 +1,108 @@
+[
+  {
+    "id": "profile-001",
+    "data": {
+      "id": "profile-001",
+      "employeeId": "emp-001",
+      "personalInfo": {
+        "name": "John Doe",
+        "email": "john.doe@nanocomputing.com",
+        "phone": "+251911234567",
+        "address": "Bole, Addis Ababa, Ethiopia",
+        "dateOfBirth": "1990-05-15",
+        "nationality": "Ethiopian"
+      },
+      "emergencyContact": {
+        "name": "Jane Doe",
+        "phone": "+251911234568",
+        "relationship": "Spouse",
+        "address": "Bole, Addis Ababa, Ethiopia"
+      },
+      "skills": [
+        "JavaScript",
+        "React",
+        "Node.js",
+        "TypeScript",
+        "Python",
+        "AWS"
+      ],
+      "certifications": [
+        {
+          "name": "AWS Certified Developer",
+          "issuer": "Amazon Web Services",
+          "issueDate": "2023-06-15",
+          "expiryDate": "2026-06-15",
+          "credentialId": "AWS-DEV-2023-001"
+        }
+      ],
+      "preferences": {
+        "notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Africa/Addis_Ababa"
+      },
+      "avatar": null,
+      "createdAt": {
+        "_seconds": 1759603499,
+        "_nanoseconds": 702000000
+      },
+      "updatedAt": {
+        "_seconds": 1759603499,
+        "_nanoseconds": 702000000
+      }
+    }
+  },
+  {
+    "id": "profile-002",
+    "data": {
+      "id": "profile-002",
+      "employeeId": "emp-002",
+      "personalInfo": {
+        "name": "Sarah Wilson",
+        "email": "sarah.wilson@nanocomputing.com",
+        "phone": "+251911234569",
+        "address": "Kazanchis, Addis Ababa, Ethiopia",
+        "dateOfBirth": "1992-08-22",
+        "nationality": "Ethiopian"
+      },
+      "emergencyContact": {
+        "name": "Mike Wilson",
+        "phone": "+251911234570",
+        "relationship": "Brother",
+        "address": "Kazanchis, Addis Ababa, Ethiopia"
+      },
+      "skills": [
+        "Figma",
+        "Adobe XD",
+        "Photoshop",
+        "Illustrator",
+        "User Research",
+        "Prototyping"
+      ],
+      "certifications": [
+        {
+          "name": "Google UX Design Certificate",
+          "issuer": "Google",
+          "issueDate": "2023-03-10",
+          "expiryDate": null,
+          "credentialId": "GOOGLE-UX-2023-002"
+        }
+      ],
+      "preferences": {
+        "notifications": true,
+        "language": "en",
+        "theme": "light",
+        "timezone": "Africa/Addis_Ababa"
+      },
+      "avatar": null,
+      "createdAt": {
+        "_seconds": 1759603502,
+        "_nanoseconds": 745000000
+      },
+      "updatedAt": {
+        "_seconds": 1759603502,
+        "_nanoseconds": 745000000
+      }
+    }
+  }
+]

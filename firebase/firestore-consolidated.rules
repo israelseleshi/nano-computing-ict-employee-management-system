@@ -1,0 +1,203 @@
+rules_version = '2';
+
+/**
+ * Firestore Security Rules for Consolidated Collections
+ * Implements Proposition 1: 8 Core Collections
+ * 
+ * Collections:
+ * 1. users (consolidated: users + employees + employeeProfiles + leaveBalances)
+ * 2. leaveRequests (consolidated: leaveRequests + managerLeaveRequests)
+ * 3. workTickets
+ * 4. timeEntries
+ * 5. payrollEntries
+ * 6. notifications
+ * 7. goals
+ * 8. settings (consolidated: settings + leaveSettings + departments)
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isManager() {
+      return isAuthenticated() && 
+        (request.auth.token.role == 'manager' || 
+         request.auth.token.role == 'admin');
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isEmployeeOrManager(employeeId) {
+      return isAuthenticated() && 
+        (isManager() || request.auth.uid == employeeId);
+    }
+    
+    // ============================================
+    // USERS COLLECTION (Consolidated)
+    // ============================================
+    match /users/{userId} {
+      // Everyone can read user profiles (for directory/collaboration)
+      allow read: if isAuthenticated();
+      
+      // Users can update their own profile (except role and leave balance)
+      allow update: if isOwner(userId) && 
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'leaveBalance']);
+      
+      // Managers can update any user's data
+      allow update: if isManager();
+      
+      // Only managers can create or delete users
+      allow create, delete: if isManager();
+    }
+    
+    // ============================================
+    // LEAVE REQUESTS COLLECTION (Consolidated)
+    // ============================================
+    match /leaveRequests/{requestId} {
+      // Employees can read their own requests, managers can read all
+      allow read: if isAuthenticated() && 
+        (isManager() || resource.data.employeeId == request.auth.uid);
+      
+      // Employees can create their own leave requests
+      allow create: if isAuthenticated() && 
+        request.resource.data.employeeId == request.auth.uid &&
+        request.resource.data.status == 'pending';
+      
+      // Employees can update their own pending requests (to cancel)
+      // Managers can update any request (to approve/reject)
+      allow update: if isAuthenticated() && (
+        (resource.data.employeeId == request.auth.uid && 
+         resource.data.status == 'pending' &&
+         request.resource.data.status == 'cancelled') ||
+        isManager()
+      );
+      
+      // Only managers can delete leave requests
+      allow delete: if isManager();
+    }
+    
+    // ============================================
+    // WORK TICKETS COLLECTION
+    // ============================================
+    match /workTickets/{ticketId} {
+      // All authenticated users can read tickets
+      allow read: if isAuthenticated();
+      
+      // Employees can create their own tickets
+      allow create: if isAuthenticated() && 
+        request.resource.data.employee_id == request.auth.uid;
+      
+      // Employees can update their own pending tickets, managers can update any
+      allow update: if isAuthenticated() && (
+        (resource.data.employee_id == request.auth.uid && 
+         resource.data.status == 'pending') ||
+        isManager()
+      );
+      
+      // Only managers can delete tickets
+      allow delete: if isManager();
+    }
+    
+    // ============================================
+    // TIME ENTRIES COLLECTION
+    // ============================================
+    match /timeEntries/{entryId} {
+      // Employees can read their own entries, managers can read all
+      allow read: if isAuthenticated() && 
+        (isManager() || resource.data.employee_id == request.auth.uid);
+      
+      // Employees can create their own time entries
+      allow create: if isAuthenticated() && 
+        request.resource.data.employee_id == request.auth.uid;
+      
+      // Employees can update their own active entries, managers can update any
+      allow update: if isAuthenticated() && (
+        (resource.data.employee_id == request.auth.uid && 
+         resource.data.status == 'active') ||
+        isManager()
+      );
+      
+      // Only managers can delete time entries
+      allow delete: if isManager();
+    }
+    
+    // ============================================
+    // PAYROLL ENTRIES COLLECTION
+    // ============================================
+    match /payrollEntries/{payrollId} {
+      // Employees can read their own payroll, managers can read all
+      allow read: if isAuthenticated() && 
+        (isManager() || resource.data.employee_id == request.auth.uid);
+      
+      // Only managers can create, update, or delete payroll entries
+      allow create, update, delete: if isManager();
+    }
+    
+    // ============================================
+    // NOTIFICATIONS COLLECTION
+    // ============================================
+    match /notifications/{notificationId} {
+      // Users can read their own notifications, managers can read all
+      allow read: if isAuthenticated() && 
+        (isManager() || resource.data.user_id == request.auth.uid);
+      
+      // Users can update their own notifications (mark as read)
+      allow update: if isAuthenticated() && 
+        resource.data.user_id == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['is_read']);
+      
+      // Only managers can create notifications
+      allow create: if isManager();
+      
+      // Users can delete their own notifications, managers can delete any
+      allow delete: if isAuthenticated() && 
+        (isManager() || resource.data.user_id == request.auth.uid);
+    }
+    
+    // ============================================
+    // GOALS COLLECTION
+    // ============================================
+    match /goals/{goalId} {
+      // Employees can read their own goals, managers can read all
+      allow read: if isAuthenticated() && 
+        (isManager() || resource.data.employee_id == request.auth.uid);
+      
+      // Managers can create goals for any employee
+      allow create: if isManager();
+      
+      // Employees can update progress on their own goals, managers can update any
+      allow update: if isAuthenticated() && (
+        (resource.data.employee_id == request.auth.uid &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['current_value', 'status', 'updated_at'])) ||
+        isManager()
+      );
+      
+      // Only managers can delete goals
+      allow delete: if isManager();
+    }
+    
+    // ============================================
+    // SETTINGS COLLECTION (Consolidated)
+    // ============================================
+    match /settings/{settingId} {
+      // All authenticated users can read settings
+      allow read: if isAuthenticated();
+      
+      // Only managers/admins can modify settings
+      allow create, update, delete: if isManager();
+    }
+    
+    // ============================================
+    // CATCH-ALL RULE (Deny by default)
+    // ============================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

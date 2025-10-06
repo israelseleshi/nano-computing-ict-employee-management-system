@@ -1,0 +1,44 @@
+[
+  {
+    "id": "dept-001",
+    "data": {
+      "id": "dept-001",
+      "name": "Development",
+      "description": "Software development and engineering",
+      "manager": "Manager Admin",
+      "employeeCount": 5,
+      "createdAt": {
+        "_seconds": 1759600602,
+        "_nanoseconds": 119000000
+      }
+    }
+  },
+  {
+    "id": "dept-002",
+    "data": {
+      "id": "dept-002",
+      "name": "Design",
+      "description": "UI/UX design and creative services",
+      "manager": "Manager Admin",
+      "employeeCount": 3,
+      "createdAt": {
+        "_seconds": 1759600602,
+        "_nanoseconds": 909000000
+      }
+    }
+  },
+  {
+    "id": "dept-003",
+    "data": {
+      "id": "dept-003",
+      "name": "Marketing",
+      "description": "Digital marketing and communications",
+      "manager": "Manager Admin",
+      "employeeCount": 2,
+      "createdAt": {
+        "_seconds": 1759600603,
+        "_nanoseconds": 309000000
+      }
+    }
+  }
+]

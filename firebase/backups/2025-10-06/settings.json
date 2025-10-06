@@ -1,0 +1,23 @@
+[
+  {
+    "id": "app-settings",
+    "data": {
+      "id": "app-settings",
+      "companyName": "Nano Computing ICT",
+      "currency": "ETB",
+      "workingHoursPerDay": 8,
+      "workingDaysPerWeek": 5,
+      "overtimeRate": 1.5,
+      "taxRate": 0.15,
+      "pensionRate": 0.07,
+      "createdAt": {
+        "_seconds": 1759600605,
+        "_nanoseconds": 10000000
+      },
+      "updatedAt": {
+        "_seconds": 1759600605,
+        "_nanoseconds": 10000000
+      }
+    }
+  }
+]

@@ -13,13 +13,18 @@
     "setup-complete-firebase": "node firebase/setup-complete-firebase.js",
     "deploy-rules": "firebase deploy --only firestore:rules",
     "deploy-indexes": "firebase deploy --only firestore:indexes",
+    "create-test-users": "node firebase/create-test-users.js",
     "deploy-firestore": "firebase deploy --only firestore",
     "test-rules": "firebase firestore:rules validate",
     "emulator": "firebase emulators:start --only firestore",
     "setup-employee-features": "node firebase/setup-employee-features.js",
-    "setup-leave-management": "node firebase/setup-leave-management.js"
+    "setup-leave-management": "node firebase/setup-leave-management.js",
+    "backup-collections": "node firebase/backup-collections.cjs",
+    "migrate-collections": "node firebase/migrate-to-consolidated.cjs",
+    "cleanup-collections": "node firebase/cleanup-old-collections.cjs"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "firebase": "^12.3.0",
     "firebase-admin": "^12.7.0",
     "lucide-react": "^0.344.0",

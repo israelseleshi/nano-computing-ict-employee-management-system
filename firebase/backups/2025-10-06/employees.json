@@ -1,0 +1,46 @@
+[
+  {
+    "id": "emp-001",
+    "data": {
+      "id": "emp-001",
+      "name": "John Doe",
+      "email": "john.doe@nanocomputing.com",
+      "department": "Development",
+      "hourlyRate": 150,
+      "position": "Senior Developer",
+      "phone": "+251911234567",
+      "hireDate": "2024-01-15",
+      "status": "active",
+      "createdAt": {
+        "_seconds": 1759600599,
+        "_nanoseconds": 784000000
+      },
+      "updatedAt": {
+        "_seconds": 1759600599,
+        "_nanoseconds": 784000000
+      }
+    }
+  },
+  {
+    "id": "emp-002",
+    "data": {
+      "id": "emp-002",
+      "name": "Jane Smith",
+      "email": "jane.smith@nanocomputing.com",
+      "department": "Design",
+      "hourlyRate": 120,
+      "position": "UI/UX Designer",
+      "phone": "+251911234568",
+      "hireDate": "2024-02-01",
+      "status": "active",
+      "createdAt": {
+        "_seconds": 1759600600,
+        "_nanoseconds": 882000000
+      },
+      "updatedAt": {
+        "_seconds": 1759600600,
+        "_nanoseconds": 882000000
+      }
+    }
+  }
+]

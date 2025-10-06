@@ -1,0 +1,82 @@
+[
+  {
+    "id": "balance-001",
+    "data": {
+      "id": "balance-001",
+      "employeeId": "emp-001",
+      "year": 2024,
+      "vacation": {
+        "total": 22,
+        "used": 6,
+        "available": 16,
+        "pending": 0
+      },
+      "sick": {
+        "total": 10,
+        "used": 3,
+        "available": 7,
+        "pending": 0
+      },
+      "personal": {
+        "total": 5,
+        "used": 0,
+        "available": 5,
+        "pending": 0
+      },
+      "emergency": {
+        "total": 3,
+        "used": 0,
+        "available": 3,
+        "pending": 0
+      },
+      "lastUpdated": {
+        "_seconds": 1759603510,
+        "_nanoseconds": 169000000
+      },
+      "createdAt": {
+        "_seconds": 1759603510,
+        "_nanoseconds": 169000000
+      }
+    }
+  },
+  {
+    "id": "balance-002",
+    "data": {
+      "id": "balance-002",
+      "employeeId": "emp-002",
+      "year": 2024,
+      "vacation": {
+        "total": 22,
+        "used": 0,
+        "available": 22,
+        "pending": 0
+      },
+      "sick": {
+        "total": 10,
+        "used": 0,
+        "available": 10,
+        "pending": 0
+      },
+      "personal": {
+        "total": 5,
+        "used": 0,
+        "available": 4,
+        "pending": 1
+      },
+      "emergency": {
+        "total": 3,
+        "used": 0,
+        "available": 3,
+        "pending": 0
+      },
+      "lastUpdated": {
+        "_seconds": 1759603510,
+        "_nanoseconds": 895000000
+      },
+      "createdAt": {
+        "_seconds": 1759603510,
+        "_nanoseconds": 895000000
+      }
+    }
+  }
+]

@@ -1,0 +1,78 @@
+[
+  {
+    "id": "leave-001",
+    "data": {
+      "id": "leave-001",
+      "employeeId": "emp-001",
+      "employeeName": "John Doe",
+      "type": "vacation",
+      "startDate": "2024-02-15",
+      "endDate": "2024-02-20",
+      "days": 6,
+      "reason": "Family vacation to Bahir Dar",
+      "status": "approved",
+      "managerComment": "Approved. Enjoy your vacation!",
+      "submittedAt": "2024-01-20T10:00:00Z",
+      "approvedAt": "2024-01-21T14:30:00Z",
+      "managerId": "manager-001",
+      "createdAt": {
+        "_seconds": 1759603504,
+        "_nanoseconds": 313000000
+      },
+      "updatedAt": {
+        "_seconds": 1759603504,
+        "_nanoseconds": 313000000
+      }
+    }
+  },
+  {
+    "id": "leave-002",
+    "data": {
+      "id": "leave-002",
+      "employeeId": "emp-001",
+      "employeeName": "John Doe",
+      "type": "sick",
+      "startDate": "2024-01-10",
+      "endDate": "2024-01-12",
+      "days": 3,
+      "reason": "Flu symptoms and recovery",
+      "status": "approved",
+      "managerComment": "Get well soon. Take care of your health.",
+      "submittedAt": "2024-01-09T08:00:00Z",
+      "approvedAt": "2024-01-09T09:15:00Z",
+      "managerId": "manager-001",
+      "createdAt": {
+        "_seconds": 1759603508,
+        "_nanoseconds": 326000000
+      },
+      "updatedAt": {
+        "_seconds": 1759603508,
+        "_nanoseconds": 326000000
+      }
+    }
+  },
+  {
+    "id": "leave-003",
+    "data": {
+      "id": "leave-003",
+      "employeeId": "emp-002",
+      "employeeName": "Sarah Wilson",
+      "type": "personal",
+      "startDate": "2024-03-01",
+      "endDate": "2024-03-01",
+      "days": 1,
+      "reason": "Personal appointment",
+      "status": "pending",
+      "submittedAt": "2024-02-25T16:00:00Z",
+      "managerId": "manager-001",
+      "createdAt": {
+        "_seconds": 1759603509,
+        "_nanoseconds": 134000000
+      },
+      "updatedAt": {
+        "_seconds": 1759603509,
+        "_nanoseconds": 134000000
+      }
+    }
+  }
+]

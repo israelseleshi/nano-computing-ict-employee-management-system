@@ -1,18 +1,20 @@
-// Firebase Database Initialization Script
 // Run this after setting up Firebase CLI and authentication
 
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, setDoc } from 'firebase/firestore';
 
-// Firebase configuration
+// Firebase configuration from environment variables
+import dotenv from 'dotenv';
+dotenv.config();
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAjWNQvBaSGZzVcdXxUte8R5KyeER-N8sg",
-  authDomain: "nanocomputingict-867d1.firebaseapp.com",
-  projectId: "nanocomputingict-867d1",
-  storageBucket: "nanocomputingict-867d1.firebasestorage.app",
-  messagingSenderId: "57439732523",
-  appId: "1:57439732523:web:41c67514e356dcb420fb6e",
-  measurementId: "G-6CD536KHZT"
+  apiKey: process.env.VITE_FIREBASE_API_KEY,
+  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.VITE_FIREBASE_APP_ID,
+  measurementId: process.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
