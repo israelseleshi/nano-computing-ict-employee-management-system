@@ -1,11 +1,11 @@
 import { useState, useMemo, useEffect } from 'react';
-import { Bell, CheckCircle2, AlertCircle, Clock, FileText, Settings, Trash2, Mail, Filter, Search } from 'lucide-react';
+import { Bell, CheckCircle2, AlertCircle, Clock, FileText, Settings, Trash2, Mail, Filter, Search, Calendar } from 'lucide-react';
 import { Profile, WorkTicketDB } from '@services/api/mock.service';
 import { firebaseService } from '@services/firebase/consolidated.service';
 
 interface Notification {
   id: string;
-  type: 'ticket_assigned' | 'ticket_approved' | 'ticket_rejected' | 'deadline_reminder' | 'system_update' | 'achievement';
+  type: 'ticket_assigned' | 'ticket_approved' | 'ticket_rejected' | 'deadline_reminder' | 'system_update' | 'achievement' | 'leave_request_update';
   title: string;
   message: string;
   timestamp: string;
@@ -129,6 +129,7 @@ export default function Notifications({ profile }: NotificationsProps) {
       case 'deadline_reminder': return Clock;
       case 'system_update': return Settings;
       case 'achievement': return CheckCircle2;
+      case 'leave_request_update': return Calendar;
       default: return Bell;
     }
   };
@@ -147,6 +148,8 @@ export default function Notifications({ profile }: NotificationsProps) {
         return 'border-orange-200 bg-orange-50';
       case 'system_update':
         return 'border-blue-200 bg-blue-50';
+      case 'leave_request_update':
+        return 'border-purple-200 bg-purple-50';
       default:
         return 'border-gray-200 bg-gray-50';
     }
@@ -166,6 +169,8 @@ export default function Notifications({ profile }: NotificationsProps) {
         return 'text-orange-600';
       case 'system_update':
         return 'text-blue-600';
+      case 'leave_request_update':
+        return 'text-purple-600';
       default:
         return 'text-gray-600';
     }

@@ -331,12 +331,43 @@ export default function App() {
   // Leave management handlers
   const handleUpdateLeaveStatus = async (requestId: string, status: 'approved' | 'rejected', comment?: string) => {
     try {
+      // Find the leave request to get employee details
+      const leaveRequest = leaveRequests.find(req => req.id === requestId);
+      if (!leaveRequest) {
+        console.error('Leave request not found:', requestId);
+        return;
+      }
+
+      // Update the leave request status
       await firebaseService.updateLeaveRequestStatus(
         requestId,
         status,
         user?.uid || '',
         comment
       );
+
+      // Create notification for the employee
+      const notificationTitle = status === 'approved' 
+        ? '✅ Leave Request Approved' 
+        : '❌ Leave Request Rejected';
+      
+      const notificationMessage = status === 'approved'
+        ? `Your ${leaveRequest.type} leave request from ${leaveRequest.startDate} to ${leaveRequest.endDate} has been approved.${comment ? ` Manager's note: ${comment}` : ''}`
+        : `Your ${leaveRequest.type} leave request from ${leaveRequest.startDate} to ${leaveRequest.endDate} has been rejected.${comment ? ` Reason: ${comment}` : ''}`;
+
+      // Send notification to employee
+      await firebaseService.createNotification({
+        user_id: leaveRequest.employeeId,
+        type: 'leave_request_update',
+        title: notificationTitle,
+        message: notificationMessage,
+        priority: status === 'rejected' ? 'high' : 'medium',
+        is_read: false
+      });
+
+      console.log(`✅ Leave request ${status} and notification sent to ${leaveRequest.employeeName}`);
+      
+      // Refresh leave requests to show updated status
       await fetchLeaveRequests();
     } catch (err) {
       console.error('Error updating leave request status:', err);
