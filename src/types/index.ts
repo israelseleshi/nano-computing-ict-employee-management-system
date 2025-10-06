@@ -38,6 +38,8 @@ export interface LeaveRequest {
   status: 'pending' | 'approved' | 'rejected';
   managerComment?: string;
   submittedAt: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
   approvedAt?: string;
   rejectedAt?: string;
   managerId?: string;

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import * as XLSX from 'xlsx';
 import { 
   Calendar,
   Clock,
@@ -39,6 +40,63 @@ export default function LeaveManagement({
   const [actionType, setActionType] = useState<'approve' | 'reject'>('approve');
   const [comment, setComment] = useState('');
   const [showDetails, setShowDetails] = useState<string | null>(null);
+
+  // Export leave requests to Excel
+  const exportToExcel = () => {
+    try {
+      // Prepare data for export
+      const exportData = filteredRequests.map(request => ({
+        'Employee Name': request.employeeName,
+        'Department': request.employeeDepartment,
+        'Leave Type': request.type.charAt(0).toUpperCase() + request.type.slice(1),
+        'Start Date': request.startDate,
+        'End Date': request.endDate,
+        'Days': request.days,
+        'Reason': request.reason,
+        'Status': request.status.charAt(0).toUpperCase() + request.status.slice(1),
+        'Submitted Date': request.submittedAt,
+        'Reviewed Date': request.reviewedAt || 'Not reviewed',
+        'Reviewed By': request.reviewedBy || 'Not reviewed',
+        'Manager Comment': request.managerComment || 'No comment'
+      }));
+
+      // Create workbook and worksheet
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.json_to_sheet(exportData);
+
+      // Set column widths
+      const colWidths = [
+        { wch: 20 }, // Employee Name
+        { wch: 15 }, // Department
+        { wch: 12 }, // Leave Type
+        { wch: 12 }, // Start Date
+        { wch: 12 }, // End Date
+        { wch: 8 },  // Days
+        { wch: 30 }, // Reason
+        { wch: 10 }, // Status
+        { wch: 15 }, // Submitted Date
+        { wch: 15 }, // Reviewed Date
+        { wch: 15 }, // Reviewed By
+        { wch: 25 }  // Manager Comment
+      ];
+      ws['!cols'] = colWidths;
+
+      // Add worksheet to workbook
+      XLSX.utils.book_append_sheet(wb, ws, 'Leave Requests');
+
+      // Generate filename with current date
+      const currentDate = new Date().toISOString().split('T')[0];
+      const filename = `Leave_Requests_Report_${currentDate}.xlsx`;
+
+      // Save file
+      XLSX.writeFile(wb, filename);
+
+      console.log('✅ Leave requests exported successfully');
+    } catch (error) {
+      console.error('❌ Error exporting leave requests:', error);
+      alert('Failed to export leave requests. Please try again.');
+    }
+  };
 
   // Get unique departments
   const departments = useMemo(() => {
@@ -127,7 +185,10 @@ export default function LeaveManagement({
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Leave Management</h1>
           <p className="text-gray-600 mt-2">Review and manage employee leave requests</p>
         </div>
-        <button className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors">
+        <button 
+          onClick={exportToExcel}
+          className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-600 transition-colors"
+        >
           <Download className="w-5 h-5" />
           <span>Export Report</span>
         </button>

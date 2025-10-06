@@ -94,22 +94,60 @@ export default function App() {
   const fetchLeaveRequests = async () => {
     try {
       const requests = await firebaseService.getLeaveRequests();
-      const convertedRequests: LeaveRequest[] = requests.map((req: any) => ({
-        id: req.id,
-        employeeId: req.employeeId,
-        employeeName: req.employeeName || 'Unknown Employee',
-        employeeDepartment: req.employeeDepartment || 'Unknown Department',
-        type: req.type,
-        startDate: req.startDate,
-        endDate: req.endDate,
-        days: req.days,
-        reason: req.reason || '',
-        status: req.status === 'cancelled' ? 'rejected' : req.status,
-        submittedAt: req.submittedAt,
-        reviewedAt: req.reviewedAt,
-        reviewedBy: req.reviewedBy,
-        managerComment: req.managerComment || ''
-      }));
+      console.log('🔍 Raw leave requests from Firebase:', requests);
+      
+      const convertedRequests: LeaveRequest[] = requests.map((req: any) => {
+        // Helper function to format dates properly
+        const formatDate = (dateValue: any) => {
+          if (!dateValue) return '';
+          
+          // If it's a Firebase Timestamp
+          if (dateValue && typeof dateValue.toDate === 'function') {
+            return dateValue.toDate().toISOString().split('T')[0];
+          }
+          
+          // If it's already a string in YYYY-MM-DD format
+          if (typeof dateValue === 'string' && dateValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            return dateValue;
+          }
+          
+          // If it's a Date object
+          if (dateValue instanceof Date) {
+            return dateValue.toISOString().split('T')[0];
+          }
+          
+          // Try to parse as date
+          try {
+            const date = new Date(dateValue);
+            if (!isNaN(date.getTime())) {
+              return date.toISOString().split('T')[0];
+            }
+          } catch (e) {
+            console.warn('Could not parse date:', dateValue);
+          }
+          
+          return '';
+        };
+
+        return {
+          id: req.id,
+          employeeId: req.employeeId,
+          employeeName: req.employeeName || 'Unknown Employee',
+          employeeDepartment: req.employeeDepartment || 'Unknown Department',
+          type: req.type,
+          startDate: formatDate(req.startDate),
+          endDate: formatDate(req.endDate),
+          days: req.days || 0,
+          reason: req.reason || '',
+          status: req.status === 'cancelled' ? 'rejected' : req.status,
+          submittedAt: formatDate(req.submittedAt),
+          reviewedAt: formatDate(req.reviewedAt),
+          reviewedBy: req.reviewedBy,
+          managerComment: req.managerComment || ''
+        };
+      });
+      
+      console.log('✅ Converted leave requests:', convertedRequests);
       setLeaveRequests(convertedRequests);
     } catch (err) {
       console.error('Error fetching leave requests:', err);
